@@ -4,6 +4,7 @@ import java.awt.Color;import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -17,9 +18,12 @@ public class Login extends JPanel {
 	private JButton btnJoin;
 	private Register register;
 	private MainFrame context;
+	private UserRepoImpl uImpl;
+	
 	// 생성자
 	public Login(MainFrame context) {
 		this.context = context;
+		uImpl = new UserRepoImpl();
 		initData();
 		setInitLayout();
 		addActionListener();
@@ -31,7 +35,7 @@ public class Login extends JPanel {
 		idField = new JTextField("아이디 입력.");
 		pwdField = new JTextField("패스워드 입력.");
 		btnLogin  = new JButton ("LOGIN");
-		btnJoin = new JButton();
+		btnJoin = new JButton("회원가");
 
 	}
 
@@ -56,7 +60,7 @@ public class Login extends JPanel {
 		pwdField.setLocation(100,140);
 		btnLogin.setLocation(125,180);
 		btnJoin.setLocation(125,220);
-
+		
 	}
 
 	private void addActionListener() {
@@ -65,7 +69,39 @@ public class Login extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			
-			super.mousePressed(e);
+			String id = idField.getText();
+			String pwd = pwdField.getText();
+			
+			try {
+				if (uImpl.checkuserID(id)) {
+					// TODO 여기는 아이디 입력 오류일떄 실행문
+					// 입력한 아이디가 db에 존재 하지 않을떄!!
+					//여기도 알람 메세지 출력 해야 겠죠>?
+					System.out.println("아이디 입력 오류");
+					
+				}else {
+					//여기는 입력한 아이디가 db에 존재 할때 실행되는 부분!!!
+					//!!!!!주석만 보지 말고 꼭 코드 뜯어보세요!!!!!!!!
+					if (uImpl.checkUserPwd(id, pwd)) {
+						// 여기는 비밀번호가 맞을떄 실행되는 부분
+						System.out.println("로그인 성공!!");
+					}else {
+						//여기는 비밀번호 틀렸을떄 실행되는 부분!!!
+						//여기도 당연히 알람 메세지 출력 꼭 해야 겠죠??? 
+						System.out.println("로그인 실패 !!");
+					}
+				}
+				
+				System.out.println("if문 탈출 !!");
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			
+			
 		}
 		 
 	});
@@ -73,7 +109,7 @@ public class Login extends JPanel {
 	btnJoin.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			 register = new Register(context);
+			 register = new Register(context,uImpl);
 			 setVisible(false);
 			
 		}

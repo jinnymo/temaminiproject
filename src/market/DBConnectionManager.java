@@ -13,7 +13,8 @@ import com.zaxxer.hikari.HikariDataSource;
  */
 
 public class DBConnectionManager {
-	
+
+	private static DBConnectionManager instance;
 	private static HikariDataSource dataSource;
 
 	// 준비물
@@ -21,35 +22,33 @@ public class DBConnectionManager {
 	private static final String USER = "root";
 	private static final String PASSWORD = "asd123";
 
-	static {
-
+	private DBConnectionManager() {
 
 		HikariConfig config = new HikariConfig();
 		config.setJdbcUrl(URL);
 		config.setUsername(USER);
 		config.setPassword(PASSWORD);
-		
+
 		config.setMaximumPoolSize(10); // 최대 연결 수 설정 10
-		
 		dataSource = new HikariDataSource(config);
-		
+
 	}
 
-	public static Connection getConnection() throws SQLException{
-		System.out.println("HikariCP을 사용한 Hata Source 활용");
+	public synchronized static DBConnectionManager getInstance() {
+		if (instance == null) {
+			instance = new DBConnectionManager();
+		}
+		return instance;
+	}
+
+	public Connection getConnection() throws SQLException {
 		return dataSource.getConnection();
 	}
-	
-	// 테스트 코드 
-	public static void main(String[] args) {
-		
-		try {
-			Connection conn =  DBConnectionManager.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}// end of main
-	
-	
+//	public static Connection getConnection() throws SQLException{
+//		System.out.println("HikariCP을 사용한 Hata Source 활용");
+//		return dataSource.getConnection();
+//	}
+
+	// 테스트 코드
+
 } // end of main
