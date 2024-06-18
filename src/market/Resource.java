@@ -1,4 +1,4 @@
-package test;
+package market;
 
 import lombok.Getter;
 
