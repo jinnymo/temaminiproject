@@ -61,7 +61,7 @@ public class Register extends JPanel {
 
 		context.add(this);
 	}
-
+ 
 	private void addEventListener() {
 
 			

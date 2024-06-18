@@ -24,7 +24,7 @@ public class MainFrame extends JFrame{
 		//setResizable(false);
 		setBackground(Color.black);
 		
-	}
+	} 
 
 	private void setInitLayout() {
 		

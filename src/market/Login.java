@@ -67,7 +67,7 @@ public class Login extends JPanel {
 			
 			super.mousePressed(e);
 		}
-		
+		 
 	});
 	// 회원가입 버튼 -> 회원가입 상세
 	btnJoin.addMouseListener(new MouseAdapter() {
