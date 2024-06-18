@@ -53,7 +53,7 @@ public class Register extends JPanel {
 		btnSubmit.setSize(Resource.LOGIN_COMP_X ,Resource.LOGIN_COMP_Y );
 		
 		userName.setLocation(100,70);
-		idField.setLocation(100,100);
+		idField.setLocation(100,100); 
 		// TODO 아이디 확인 
 		
 		pwdField.setLocation(100,140);
