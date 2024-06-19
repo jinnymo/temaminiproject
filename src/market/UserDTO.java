@@ -13,7 +13,8 @@ import lombok.ToString;
 @Builder
 public class UserDTO {
 	
-	private int user_id;
+	private int user_num;
+	private String user_id;
 	private String name;
 	private String password;
 

@@ -57,24 +57,31 @@ public class UserRepoImpl implements UserRepo {
 	}
 
 	@Override
-	public boolean checkUserPwd(String userId,String userpwd) throws SQLException {
-		
+	public UserDTO checkUserPwd(String userId, String userpwd) throws SQLException {
+
 		ResultSet rs;
 		try (Connection conn = DBConnectionManager.getInstance().getConnection()) {
 			PreparedStatement pstmt = conn.prepareStatement(CHECK_USERPWD);
 			pstmt.setString(1, userId);
 			pstmt.setString(2, userpwd);
 			rs = pstmt.executeQuery();
+
 			if (rs.next()) {
 				// 비밀번호 맞음
-				return true;
+				int myNum = rs.getInt("user_num");
+				String myId = rs.getString("user_id");
+				String myName = rs.getString("name");
+				String myPwd = rs.getString("password");
+				return new UserDTO(myNum,myId,myName,myPwd);
+				
+				//return true;
 			} else {
 				// 비밀번호 틀림
-				return false;
+				return null;
 			}
 
 		}
-		
+
 	}
 
 }

@@ -19,7 +19,7 @@ public class Login extends JPanel {
 	private Register register;
 	private MainFrame context;
 	private UserRepoImpl uImpl;
-	
+	private UserDTO myUserDTO;
 	// 생성자
 	public Login(MainFrame context) {
 		this.context = context;
@@ -82,12 +82,14 @@ public class Login extends JPanel {
 				}else {
 					//여기는 입력한 아이디가 db에 존재 할때 실행되는 부분!!!
 					//!!!!!주석만 보지 말고 꼭 코드 뜯어보세요!!!!!!!!
-					if (uImpl.checkUserPwd(id, pwd)) {
+					if ((myUserDTO = uImpl.checkUserPwd(id, pwd)) != null) {
+						//UserDTO myUserDTO = uImpl.checkUserPwd(id, pwd) != null
 						// 여기는 비밀번호가 맞을떄 실행되는 부분
 						System.out.println("로그인 성공!!");
+						
+						context.startMainSystem(myUserDTO);
 						setVisible(false);
-						PanelAdapter a = new PanelAdapter();
-						context.add(a);
+						
 					}else {
 						//여기는 비밀번호 틀렸을떄 실행되는 부분!!!
 						//여기도 당연히 알람 메세지 출력 꼭 해야 겠죠??? 

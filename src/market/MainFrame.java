@@ -5,12 +5,13 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 import lombok.Data;
+
 public class MainFrame extends JFrame {
-	
-	Login loginPanel;
-	
+
+	public Login loginPanel;
+	private PanelAdapter panelAdapter;
 	public MainFrame() {
-	
+
 		loginPanel = new Login(this);
 
 		initData();
@@ -32,11 +33,16 @@ public class MainFrame extends JFrame {
 		setLayout(null); // 좌표기준으로만
 		setLocation(0, 0);
 		setVisible(true);
-		
-		//todo
-		//로그인 완료후 loginpanel 객체 삭
+
+		// todo
+		// 로그인 완료후 loginpanel 객체 삭
 		add(loginPanel);
-		
+
+	}
+
+	public void startMainSystem(UserDTO MyUserDTO) {
+		panelAdapter = new PanelAdapter();
+		add(panelAdapter);
 	}
 
 	public static void main(String[] args) {

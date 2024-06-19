@@ -16,6 +16,6 @@ public interface UserRepo {
 	//void checkuser();
 	boolean checkuserID(String userId) throws SQLException;
 	
-	boolean checkUserPwd(String userId,String userpwd) throws SQLException;
+	UserDTO checkUserPwd(String userId,String userpwd) throws SQLException;
 	
 }
