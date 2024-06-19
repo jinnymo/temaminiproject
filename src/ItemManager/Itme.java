@@ -1,4 +1,4 @@
-package JLabel;
+package ItemManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,10 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-public class Book {
+public class Itme {
 
 	private String name;
-	private String author;
+	private String pirce;
 	private String iconName;
 
 }
