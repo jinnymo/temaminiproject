@@ -1,16 +1,19 @@
 package market;
 
 import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Register extends JPanel {
+public class Register extends JPanel implements FocusListener {
 	private JTextField userName;
 	private JTextField idField;
 	private JTextField pwdField;
@@ -40,6 +43,13 @@ public class Register extends JPanel {
 		btnSubmit = new JButton("가입하기");
 		btnCheckId = new JButton("아이디 중복 확인");
 
+	
+
+		userName.setForeground(Color.GRAY);
+		idField.setForeground(Color.GRAY);
+		pwdField.setForeground(Color.GRAY);
+
+
 	}
 
 	private void setInitLayout() {
@@ -55,6 +65,10 @@ public class Register extends JPanel {
 		add(btnSubmit);
 		add(btnCheckId);
 
+		userName.addFocusListener(this);
+		idField.addFocusListener(this);
+		pwdField.addFocusListener(this);
+
 		userName.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 		idField.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 		pwdField.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
@@ -68,6 +82,10 @@ public class Register extends JPanel {
 		btnSubmit.setLocation(125, 220);
 
 		context.add(this);
+
+		// 알림 양식
+		// JOptionPane.showMessageDialog(null, "알림","알림제목",JOptionPane.WARNING_MESSAGE);
+
 	}
 
 	private void addEventListener() {
@@ -92,14 +110,12 @@ public class Register extends JPanel {
 						// 사용가능
 						btnCheckId.setText("사용가능");
 					} else {
-						// TODO 여기는 중복아이디 일시 실행되는 부분
-						//여기서도 사용자에게 알람 띄우기!!!!! 꼭!!
-						
+						// 아이디 중복 알림
+						JOptionPane.showMessageDialog(null, "이미 사용중인 ID 입니다.", "경고", JOptionPane.WARNING_MESSAGE);
 						idField.setText("중복 아이디 다시 입력");
 					}
 
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -110,7 +126,6 @@ public class Register extends JPanel {
 		btnSubmit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 				if (checkTextField() && idCheck) {
 					int result = 0;
@@ -121,22 +136,17 @@ public class Register extends JPanel {
 						e2.printStackTrace();
 					}
 					if (result > 0) {
-						// TODO db에 유저 정보 정상등록 된 상황
-						// 유저에게 알람 띄우기 메세지 = 회원가입 성공
-						
-						//정상 등록 되면 회원가입창 숨기고 로그인창 열기 
+						// 회원가입 완료 알림
+						JOptionPane.showMessageDialog(null, " 회원가입이 완료되었습니다. ", "", JOptionPane.PLAIN_MESSAGE);
+						// 정상 등록 되면 회원가입창 숨기고 로그인창 열기
 						setVisible(false);
 						context.loginPanel.setVisible(true);
-						
+
 					}
-					
+
 				} else {
-					// TODO 빈값이 있거나 기본 데이터에서 수정 하지 않은 필드가 있다는 뜻
-					// 여기서 알림차 띄우기 !!!!
-					//또는 id 중복 체크 하지 않았다는 거
-					//사용자에가 알람을띄우는데 무었을 안했는지 알려주는게
-					// 좋겠지요??/????
-					System.out.println("test- 무언갈 안함!!!");
+					// 회원가입 > 아이디 중복체크 x 알림
+					JOptionPane.showMessageDialog(null, " 아이디 중복확인를 해주십시요. ", "경고", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -149,14 +159,51 @@ public class Register extends JPanel {
 		if (userName.getText().equals("") || userName.getText().equals("이름을 입력하세요.")) {
 			System.out.println("test1");
 			return false;
-		}else if (pwdField.getText().equals("") || pwdField.getText().equals("패스워드를 입력하세요")) {
+		} else if (pwdField.getText().equals("") || pwdField.getText().equals("패스워드를 입력하세요")) {
 			System.out.println("test2");
 			return false;
-		}else {
+		} else {
 			return true;
 		}
-		
-		
+
 	}
 
+	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+
+		if (e.getSource() == idField) {
+			idField.setText("");
+			idField.setForeground(Color.BLACK);
+		} else if (e.getSource() == userName) {
+			userName.setText("");
+			userName.setForeground(Color.BLACK);
+		} else if (e.getSource() == pwdField) {
+			pwdField.setText("");
+			pwdField.setForeground(Color.BLACK);
+		}
+
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+
+		if (e.getSource() == idField) {
+			if (idField.getText().isEmpty()) {
+				idField.setForeground(Color.GRAY);
+				idField.setText("아이디를 입력하세요.");
+			}
+		} else if (e.getSource() == userName) {
+			if (userName.getText().isEmpty()) {
+				userName.setForeground(Color.GRAY);
+				userName.setText("이름을 입력하세요.");
+			}
+		} else if (e.getSource() == pwdField) {
+			if (pwdField.getText().isEmpty()) {
+				pwdField.setForeground(Color.GRAY);
+				pwdField.setText("비밀번호를 입력하세요.");
+			}
+		}
+	}
 }
