@@ -93,7 +93,8 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		
 		itemListPanel.setVisible(true);
 		chatListPanel.setVisible(false);
-		
+		addItemPanel.setVisible(false);
+        myInfoPanel.setVisible(false);
 		
 
 	}
@@ -103,6 +104,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		chatListBtn.addActionListener(this);
 		addItemBtn.addActionListener(this);
 		myInfoBtn.addActionListener(this);
+		
 
 	}
 
@@ -130,7 +132,8 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			addItemPanel.setVisible(false);
 			myInfoPanel.setVisible(true);
 		}
-		
+		revalidate();
+        repaint();
 
 	}
 

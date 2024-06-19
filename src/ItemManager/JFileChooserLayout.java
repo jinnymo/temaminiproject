@@ -25,8 +25,8 @@ public class JFileChooserLayout extends JPanel {
 	private FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF & PNG Images", "jpg", "gif", "png");
 	private String imagePath = null;
 	private File fileUrl = null;
-	private ItemBufferedImage image;
-	private ItemDAO dao;
+	//private ItemBufferedImage image;
+	//private ItemDAO dao;
 
 	public Component printFilePath() {
 
