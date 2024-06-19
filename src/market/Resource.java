@@ -14,7 +14,11 @@ public class Resource {
 	public final static int LOGIN_COMP_X = 150;
 	public final static int LOGIN_COMP_Y = 30;
 	
+	public final static int ADP_BOTTOM_BTN_X = 100;
+	public final static int ADP_BOTTOM_BTN_Y = 100;
 	
+	public final static int ADP_PANEL_X = 400;
+	public final static int ADP_PANEL_Y = 500;
 	
 	
 }

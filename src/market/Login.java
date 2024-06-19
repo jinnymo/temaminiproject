@@ -85,6 +85,9 @@ public class Login extends JPanel {
 					if (uImpl.checkUserPwd(id, pwd)) {
 						// 여기는 비밀번호가 맞을떄 실행되는 부분
 						System.out.println("로그인 성공!!");
+						setVisible(false);
+						PanelAdapter a = new PanelAdapter();
+						context.add(a);
 					}else {
 						//여기는 비밀번호 틀렸을떄 실행되는 부분!!!
 						//여기도 당연히 알람 메세지 출력 꼭 해야 겠죠??? 
