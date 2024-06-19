@@ -1,8 +1,9 @@
-package JLabel;
+package ItemManager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,17 +11,17 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
-public class BookRenderer extends JPanel implements ListCellRenderer<Book> {
+public class ItemRendererPanel extends JPanel implements ListCellRenderer<Itme> {
 
 	private JLabel lbIcon = new JLabel();
 	private JLabel lbName = new JLabel();
 	private JLabel lbAuthor = new JLabel();
 	private JPanel panelText;
 	private JPanel panelIcon;
-//	private BufferedImage image;
-//	image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private BufferedImage image;
+	private JFileChooserLayout chooserLayout;
 
-	public BookRenderer() {
+	public ItemRendererPanel() {
 		setLayout(new BorderLayout(5, 5));
 
 		JPanel panelText = new JPanel(new GridLayout(0, 1));
@@ -32,11 +33,11 @@ public class BookRenderer extends JPanel implements ListCellRenderer<Book> {
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Book> list, Book book, int index, boolean isSelected,
+	public Component getListCellRendererComponent(JList<? extends Itme> list, Itme itme, int index, boolean isSelected,
 			boolean cellHasFocus) {
-		lbIcon.setIcon(new ImageIcon(getClass().getResource("/JLabel/images/" + book.getIconName() + ".jpg")));
-		lbName.setText(book.getName());
-		lbAuthor.setText(book.getAuthor());
+		lbIcon.setIcon(new ImageIcon(getClass().getResource("/JLabel/images/" + itme.getIconName() + ".jpg"))); // resultSet.getImage
+		lbName.setText(itme.getName()); // resultSet.getName
+		lbAuthor.setText(itme.getPirce()); // resultSet.getPrice
 
 		// 선택시 배경 불투명도 true로 해둬야 선택을 확인가능
 		lbIcon.setOpaque(true);
