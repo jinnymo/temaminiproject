@@ -16,6 +16,8 @@ public class myInfoPanel extends JPanel implements Runnable{
 	// 회원정보 수정 -> panel로 만들어서 text 사용해서 버튼 누르면 -> 버튼(수정) -> , text
 	// item -> panel  , draw
 	
+	
+	private JPanel mypagePanel;
 	private JButton reviceBtn; //수정
 	private JLabel reviceLbl;
 	private JPanel itemListPanel; // 라벨
@@ -34,10 +36,11 @@ public class myInfoPanel extends JPanel implements Runnable{
 		setSize(Resource.ADP_PANEL_X, Resource.ADP_PANEL_Y);
 		setLocation(0,50);
 		
+		mypagePanel = new JPanel();
 		reviceBtn = new JButton("수정");
 		reviceLbl = new JLabel("회원정보 수정");
 		
-		itemListPanel = new JPanel();
+		mypagePanel.setSize(getPreferredSize());
 		
 		reviceLbl.setLocation(10, 10);
 		reviceBtn.setLocation(300, 10);
@@ -49,6 +52,7 @@ public class myInfoPanel extends JPanel implements Runnable{
 		setBackground(Color.gray);
 	//	add(reviceLbl);
 	//	add(reviceBtn);
+		add(mypagePanel);
 		
 
 	}
