@@ -134,6 +134,7 @@ public class Login extends JPanel implements FocusListener {
 		// TODO Auto-generated method stub
 		if (e.getSource() == idField) {
 			idField.setText("");
+			pwdField.setForeground(Color.BLACK);
 		} else if (e.getSource() == pwdField) {
 			pwdField.setText("");
 			pwdField.setForeground(Color.BLACK);
