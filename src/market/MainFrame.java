@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import lombok.Data;
 import lombok.Getter;
+
 @Getter
 public class MainFrame extends JFrame {
 
@@ -13,7 +14,7 @@ public class MainFrame extends JFrame {
 	private PanelAdapter panelAdapter;
 	private UserDTO myUserDTO;
 	private ItemRepoImpl itemRepoImpl;
-	
+
 	public MainFrame() {
 		loginPanel = new Login(this);
 		itemRepoImpl = new ItemRepoImpl();
@@ -31,7 +32,6 @@ public class MainFrame extends JFrame {
 		setLayout(null); // 좌표 기준으로 설정
 		setLocation(0, 0);
 
-		
 		add(loginPanel);
 		loginPanel.setVisible(true);
 
@@ -46,8 +46,6 @@ public class MainFrame extends JFrame {
 
 		add(panelAdapter);
 		panelAdapter.setVisible(true); // 패널 가시성 설정
-
-
 
 		// 기존 로그인 패널 제거
 		loginPanel.setVisible(false);

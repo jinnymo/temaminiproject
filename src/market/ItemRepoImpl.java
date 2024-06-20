@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.jdbc.Blob;
-
 public class ItemRepoImpl implements ItemRepo {
 
 	@Override
@@ -39,7 +37,7 @@ public class ItemRepoImpl implements ItemRepo {
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, product_id);
 			pstmt.setBytes(2, image);
-			pstmt.setInt(3, num+1);
+			pstmt.setInt(3, num + 1);
 			rowCount = pstmt.executeUpdate();
 		}
 		return rowCount;
@@ -60,6 +58,7 @@ public class ItemRepoImpl implements ItemRepo {
 		return product_id;
 	}
 
+	@Override
 	public List<ItemListDTO> getItemDTO() throws SQLException {
 		int product_id = 0;
 		String name = null;
@@ -68,7 +67,7 @@ public class ItemRepoImpl implements ItemRepo {
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
 		String query = " SELECT i.product_id, product_name, price, image " + "from item as i "
 				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1"
-						+ " order by i.date desc ";
+				+ " order by i.date desc ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
@@ -77,12 +76,25 @@ public class ItemRepoImpl implements ItemRepo {
 				name = rs.getString("product_name");
 				price = rs.getString("price");
 				image = rs.getBytes("image");
-				//TODO DTO 입력 -> JList 
+				// TODO DTO 입력 -> JList
 				itemListDTOs.add(new ItemListDTO(product_id, name, price, image));
 			}
 		}
 		return itemListDTOs;
-		
+
+	}
+
+	@Override
+	public List<ItemListDTO> getItemDetailDTO() throws SQLException {
+		// TODO SELECT 쿼리
+		String query = "  "; 
+		// TODO 이미지 큰거3장 작은거3장 받기
+		try (Connection conn = DBConnectionManager.getInstance().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(query)) {
+			ResultSet rs = pstmt.executeQuery();
+
+		}
+		return null;
 	}
 
 }

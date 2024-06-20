@@ -21,6 +21,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 
+import lombok.Data;
+
+@Data
 class ItemListPanel extends JPanel {
 	private MainFrame mContext;
 	private JList<ItemListDTO> listItemDTO;
@@ -74,6 +77,11 @@ class ItemListPanel extends JPanel {
 		return list;
 	}
 
+	public ItemListDTO getSelectedItem() {
+		return listItemDTO.getSelectedValue();
+	}
+
+	@Data
 	private class ItemListDTORenderer extends JPanel implements ListCellRenderer<ItemListDTO> {
 
 		private JLabel lbIcon = new JLabel();

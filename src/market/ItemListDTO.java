@@ -1,7 +1,5 @@
 package market;
 
-import com.mysql.cj.jdbc.Blob;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
