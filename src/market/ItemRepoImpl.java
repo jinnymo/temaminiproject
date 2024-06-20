@@ -48,7 +48,7 @@ public class ItemRepoImpl implements ItemRepo {
 	@Override
 	public int getProductId(int userNum) throws SQLException {
 		int product_id = 0;
-		String query = " SELECT product_id from item WHERE user_num = ? order by date desc limit 1 ";
+		String query = " SELECT product_id from item WHERE user_num = ? order by date asc limit 1 ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, userNum);
