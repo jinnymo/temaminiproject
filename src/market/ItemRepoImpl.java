@@ -32,13 +32,14 @@ public class ItemRepoImpl implements ItemRepo {
 	}
 
 	@Override
-	public int addImage(int product_id, byte[] image, String tableName) throws SQLException {
+	public int addImage(int product_id, byte[] image, String tableName, int num) throws SQLException {
 		int rowCount = 0;
-		String query = " INSERT INTO " + tableName + " (product_id, image) VALUES(?, ?) ";
+		String query = " INSERT INTO " + tableName + " (product_id, image,image_num) VALUES(?, ?,?) ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, product_id);
 			pstmt.setBytes(2, image);
+			pstmt.setInt(3, num+1);
 			rowCount = pstmt.executeUpdate();
 		}
 		return rowCount;
@@ -66,7 +67,8 @@ public class ItemRepoImpl implements ItemRepo {
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
 		String query = " SELECT i.product_id, product_name, price, image " + "from item as i "
-				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1 ";
+				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1"
+						+ " order by i.date desc ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();

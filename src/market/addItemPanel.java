@@ -196,18 +196,30 @@ public class addItemPanel extends JPanel {
 							try {
 								byte[] smallImageBytes = bufferedImageToBytes(bfIsmall);
 								byte[] bigImageBytes = bufferedImageToBytes(bfIbig);
-								itemRepoImpl.addImage(productId, bigImageBytes, "original_item_image");
-								itemRepoImpl.addImage(productId, smallImageBytes, "scaled_item_image");
-								Thread a = new Thread();
+								itemRepoImpl.addImage(productId, bigImageBytes, "original_item_image",i);
+								itemRepoImpl.addImage(productId, smallImageBytes, "scaled_item_image",i);
+
 							} catch (IOException e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (SQLException e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
 						}
-						
-						//여기서 이미지 패스 초기화 해야함
+						bigimageIconArr = new ImageIcon[3];
+                        smallImageArr = new Image[3];
+                        bigImageArr = new Image[3];
+
+                        imagePath1 = null;
+                        imagePath2 = null;
+                        imagePath3 = null;
+
+                        scaledImgLabel1.setIcon(scaledicon);
+                        scaledImgLabel2.setIcon(scaledicon);
+                        scaledImgLabel3.setIcon(scaledicon);
+                        imageLabel.setIcon(bigicon);
 
 					}
 				});
@@ -225,7 +237,6 @@ public class addItemPanel extends JPanel {
 		// null point 예상
 		private BufferedImage toBufferedImage(Image image) {
 
-			System.out.println("Asdfiu;hoesfwar;jiuk;h");
 			BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
 					BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2d = bufferedImage.createGraphics();
