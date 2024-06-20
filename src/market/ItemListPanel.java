@@ -35,6 +35,11 @@ class ItemListPanel extends JPanel {
 		this.itemRepoImpl = mContext.getItemRepoImpl();
 		initData();
 		setInitLayout();
+		upDateList();
+	}
+
+	public void upDateList() {
+		model.clear();
 		try {
 			itemListDTOs = itemRepoImpl.getItemDTO();
 			for (ItemListDTO itemListDTO : itemListDTOs) {

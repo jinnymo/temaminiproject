@@ -133,7 +133,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			addItemPanel.setVisible(false);
 			myInfoPanel.setVisible(true);
 		} else if (e.getSource() == updateBtn) {
-			itemListPanel.revalidate();
+			itemListPanel.upDateList();
 		}
 		revalidate();
 		repaint();
