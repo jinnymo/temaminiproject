@@ -14,7 +14,7 @@ public class ChatRepoIm implements ChatingRepo {
 			userNum1 = userNum2;
 			userNum2 = index;
 		}
-		String query = "INSERT INTO chatlist VALUES (?)";
+		String query = "CREATE INTO chatlist VALUES (?)";
 		return 0;
 	}
 
