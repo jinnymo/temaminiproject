@@ -42,7 +42,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		itemListPanel = new ItemListPanel();
 		chatListPanel = new ChatListPanel();
 		addItemPanel = new addItemPanel();
-		myInfoPanel = new myInfoPanel(mContext);
+		myInfoPanel = new myInfoPanel();
 		
 		topPanel = new JPanel();
 		searchTF = new JTextField("검색");

@@ -1,14 +1,14 @@
 package market;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,7 +16,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class addItemPanel extends JPanel implements Runnable {
@@ -25,7 +24,7 @@ public class addItemPanel extends JPanel implements Runnable {
 
 	private ImageIcon bigicon;
 	private ImageIcon scaledicon;
-	
+
 	private JLabel imageLabel;
 	private JTextField titleTF;
 	private JTextField priceTF;
@@ -35,7 +34,7 @@ public class addItemPanel extends JPanel implements Runnable {
 	private JLabel scaledImgLabel1;
 	private JLabel scaledImgLabel2;
 	private JLabel scaledImgLabel3;
-	
+
 	private JComboBox<String> categoryBox;
 
 	private JFileChooser fileSelecter = new JFileChooser();
@@ -47,9 +46,12 @@ public class addItemPanel extends JPanel implements Runnable {
 	private String imagePath1 = null;
 	private String imagePath2 = null;
 	private String imagePath3 = null;
-	
-	//이거도 올리고 null 처리 해야함!!
+
+	// 이거도 올리고 null 처리 해야함!!
 	private ImageIcon[] bigimageIconArr = new ImageIcon[3];
+	private Image[] smallImageArr = new Image[3];
+	private Image[] bigImageArr = new Image[3];
+
 	// 재사용 가능
 	private File fileUrl = null;
 
@@ -60,8 +62,7 @@ public class addItemPanel extends JPanel implements Runnable {
 		categoryBox.addItem("도서");
 		categoryBox.addItem("가구");
 		categoryBox.addItem("스포츠");
-		
-		
+
 		bigicon = new ImageIcon("img/show_big_img.png");
 		scaledicon = new ImageIcon("img/add_img.png");
 		imageLabel = new JLabel(bigicon);
@@ -71,8 +72,7 @@ public class addItemPanel extends JPanel implements Runnable {
 		titleTF = new JTextField("제목 입력");
 		priceTF = new JTextField("가격 입력");
 		contentTF = new JTextField("내용 입력");
-		
-		
+
 		scaledImgLabel1 = new JLabel(scaledicon);
 		scaledImgLabel2 = new JLabel(scaledicon);
 		scaledImgLabel3 = new JLabel(scaledicon);
@@ -95,13 +95,13 @@ public class addItemPanel extends JPanel implements Runnable {
 
 		titleTF.setSize(200, 30);
 		titleTF.setLocation(0, 210);
-		
+
 		priceTF.setSize(200, 30);
 		priceTF.setLocation(200, 210);
-		
-		contentTF.setSize(400,180);
-		contentTF.setLocation(0,270);
-		
+
+		contentTF.setSize(400, 180);
+		contentTF.setLocation(0, 270);
+
 		scaledImgLabel1.setSize(100, 70);
 		scaledImgLabel2.setSize(100, 70);
 		scaledImgLabel3.setSize(100, 70);
@@ -109,8 +109,8 @@ public class addItemPanel extends JPanel implements Runnable {
 		scaledImgLabel1.setLocation(0, 0);
 		scaledImgLabel2.setLocation(0, 70);
 		scaledImgLabel3.setLocation(0, 140);
-		
-		categoryBox.setSize(400,30);
+
+		categoryBox.setSize(400, 30);
 		categoryBox.setLocation(0, 240);
 
 		// 파일 검색창에 표시할 확장자명 필터 거는 부분 아마도???
@@ -142,11 +142,11 @@ public class addItemPanel extends JPanel implements Runnable {
 		scaledImgLabel1.addMouseListener(labelMouseListener);
 		scaledImgLabel2.addMouseListener(labelMouseListener);
 		scaledImgLabel3.addMouseListener(labelMouseListener);
+		submitBtn.addMouseListener(labelMouseListener);
 	}
 
-	@Override 
+	@Override
 	public void run() {
-		
 
 	}
 
@@ -157,27 +157,64 @@ public class addItemPanel extends JPanel implements Runnable {
 
 			if (e.getSource() == scaledImgLabel1) {
 				imagePath1 = getImagePath();
-				scaledImgLabel1.setIcon(getScaledIcon(imagePath1,0));
-			}else if (e.getSource() == scaledImgLabel2) {
+				scaledImgLabel1.setIcon(getScaledIcon(imagePath1, 0));
+			} else if (e.getSource() == scaledImgLabel2) {
 				imagePath2 = getImagePath();
-				scaledImgLabel2.setIcon(getScaledIcon(imagePath2,1));
-			}else if (e.getSource() == scaledImgLabel3) {
+				scaledImgLabel2.setIcon(getScaledIcon(imagePath2, 1));
+			} else if (e.getSource() == scaledImgLabel3) {
 				imagePath3 = getImagePath();
-				scaledImgLabel3.setIcon(getScaledIcon(imagePath3,2));
+				scaledImgLabel3.setIcon(getScaledIcon(imagePath3, 2));
+			} else if (e.getSource() == submitBtn) {
+				Thread push = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						for (int i = 0; i < 3; i++) {
+							BufferedImage bfIsmall = toBufferedImage(smallImageArr[i]);
+							BufferedImage bfIbig = toBufferedImage(bigImageArr[i]);
+							try {
+								byte[] smallImageBytes = bufferedImageToBytes(bfIsmall);
+								byte[] bigImageBytes = bufferedImageToBytes(bfIbig);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						
+						}
+
+					}
+				});
 			}
 
 		}
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			if (e.getSource() == scaledImgLabel1) {
-				imageLabel.setIcon(bigimageIconArr[0]);
-			}else if (e.getSource() == scaledImgLabel2) {
-				imageLabel.setIcon(bigimageIconArr[1]);
-			}else if (e.getSource() == scaledImgLabel3) {
-				imageLabel.setIcon(bigimageIconArr[2]);
-			}
+
+		private  byte[] bufferedImageToBytes(BufferedImage bufferedImage) throws IOException {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImage, "png", baos);
+			return baos.toByteArray();
+		}
+	
+
+	// null point 예상
+	private  BufferedImage toBufferedImage(Image img) {
+		if (img instanceof BufferedImage) {
+			return (BufferedImage) img;
+		}
+		return null;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		if (e.getSource() == scaledImgLabel1) {
+			imageLabel.setIcon(bigimageIconArr[0]);
+		} else if (e.getSource() == scaledImgLabel2) {
+			imageLabel.setIcon(bigimageIconArr[1]);
+		} else if (e.getSource() == scaledImgLabel3) {
+			imageLabel.setIcon(bigimageIconArr[2]);
 		}
 	}
+
+}
 
 	public String getImagePath() {
 		int tempCount = fileSelecter.showOpenDialog(getParent());
@@ -196,6 +233,8 @@ public class addItemPanel extends JPanel implements Runnable {
 		ImageIcon tempImg = new ImageIcon(imagepath);
 		Image smallImage = tempImg.getImage().getScaledInstance(100, 70, Image.SCALE_FAST);
 		Image bigImage = tempImg.getImage().getScaledInstance(300, 210, Image.SCALE_FAST);
+		smallImageArr[index] = smallImage;
+		bigImageArr[index] = bigImage;
 		bigimageIconArr[index] = new ImageIcon(bigImage);
 		return new ImageIcon(smallImage);
 	}
