@@ -32,13 +32,14 @@ public class ItemRepoImpl implements ItemRepo {
 	}
 
 	@Override
-	public int addImage(int product_id, byte[] image, String tableName) throws SQLException {
+	public int addImage(int product_id, byte[] image, String tableName, int num) throws SQLException {
 		int rowCount = 0;
-		String query = " INSERT INTO " + tableName + " (product_id, image) VALUES(?, ?) ";
+		String query = " INSERT INTO " + tableName + " (product_id, image) VALUES(?, ?,?) ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, product_id);
 			pstmt.setBytes(2, image);
+			pstmt.setInt(3, num+1);
 			rowCount = pstmt.executeUpdate();
 		}
 		return rowCount;
