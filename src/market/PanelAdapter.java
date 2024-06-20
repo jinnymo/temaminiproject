@@ -39,7 +39,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		setBackground(Color.blue);
 		setVisible(true);
 
-		itemListPanel = new ItemListPanel();
+		itemListPanel = new ItemListPanel(mContext);
 		chatListPanel = new ChatListPanel();
 		addItemPanel = new addItemPanel(mContext);
 		myInfoPanel = new myInfoPanel();

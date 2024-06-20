@@ -10,7 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ItemListDTO {
-	private String name;
+	private int productId;
+	private String productName;
 	private String price;
 	private byte[] image;
 }

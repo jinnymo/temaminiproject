@@ -47,9 +47,7 @@ public class MainFrame extends JFrame {
 		add(panelAdapter);
 		panelAdapter.setVisible(true); // 패널 가시성 설정
 
-		// 레이아웃 재검토
-		revalidate();
-		repaint();
+
 
 		// 기존 로그인 패널 제거
 		loginPanel.setVisible(false);

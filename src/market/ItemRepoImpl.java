@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.cj.jdbc.Blob;
 
@@ -56,17 +58,15 @@ public class ItemRepoImpl implements ItemRepo {
 		}
 		return product_id;
 	}
-	
-	public void getItemDTO() throws SQLException{
+
+	public List<ItemListDTO> getItemDTO() throws SQLException {
 		int product_id = 0;
 		String name = null;
 		String price = null;
 		byte[] image = null;
-				
-		String query = " SELECT i.product_id, product_name, price, image "
-				+ "from item as i "
-				+ "join scaled_item_image as s on i.product_id = s.product_id "
-				+ "where image_num = 1 ";
+		List<ItemListDTO> itemListDTOs = new ArrayList<>();
+		String query = " SELECT i.product_id, product_name, price, image " + "from item as i "
+				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1 ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
@@ -75,10 +75,12 @@ public class ItemRepoImpl implements ItemRepo {
 				name = rs.getString("product_name");
 				price = rs.getString("price");
 				image = rs.getBytes("image");
+				//TODO DTO 입력 -> JList 
+				itemListDTOs.add(new ItemListDTO(product_id, name, price, image));
 			}
 		}
+		return itemListDTOs;
+		
 	}
-	
-	
 
 }

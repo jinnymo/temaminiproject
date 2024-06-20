@@ -1,6 +1,7 @@
 package market;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface ItemRepo {
 
@@ -10,5 +11,6 @@ public interface ItemRepo {
 	int addImage(int product_id, byte[] image, String tableName) throws SQLException;
 
 	int getProductId(int userNum) throws SQLException;
-	
+
+	List<ItemListDTO> getItemDTO() throws SQLException;
 }
