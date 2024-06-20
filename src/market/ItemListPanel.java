@@ -10,38 +10,10 @@ class Item {
 	private String itemName;
 	private int price;
 
-<<<<<<< HEAD
-public class ItemListPanel extends JPanel implements Runnable {
-
-	private JLabel imageLabel;
-
-	public ItemListPanel() {
-
-		initData();
-		setInitLayout();
-
-	}
-
-	private void initData() {
-
-		setLayout(null);
-		setSize(Resource.ADP_PANEL_X, Resource.ADP_PANEL_Y);
-		setLocation(0, 50);
-
-		imageLabel = new JLabel();
-		imageLabel.setSize(400, 200);
-		imageLabel.setLocation(0, 50);
-	}
-
-	private void setInitLayout() {
-		setBackground(Color.pink);
-		add(imageLabel);
-=======
 	public Item(ImageIcon imageIcon, String itemName, int price) {
 		this.imageIcon = imageIcon;
 		this.itemName = itemName;
 		this.price = price;
->>>>>>> eor
 
 	}
 
@@ -72,10 +44,13 @@ class ItemPanel extends JPanel {
 	private JLabel imageLabel;
 
 	public void MainFrame() {
+		///setTitle("중고거래 목록");
 		setSize(600, 400);
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		ItemListPanel itemListPanel = new ItemListPanel();
 		add(itemListPanel);
+
 		setVisible(true);
 	}
 

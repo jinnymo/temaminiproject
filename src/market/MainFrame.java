@@ -31,6 +31,7 @@ public class MainFrame extends JFrame {
 		setLayout(null); // 좌표 기준으로 설정
 		setLocation(0, 0);
 
+		
 		add(loginPanel);
 		loginPanel.setVisible(true);
 
