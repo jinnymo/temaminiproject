@@ -3,9 +3,9 @@ package market;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface ChatingRepo {
+public interface ChatRepo {
 
-	int addChatRoom(ChatDTO dto, ItemDTO itemdot) throws SQLException;
+	int CreateChatRoom(ChatDTO dto, ItemDTO itemdot) throws SQLException;
 
 	List<ChatDTO> ChatingList() throws SQLException;
 

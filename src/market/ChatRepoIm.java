@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRepoIm implements ChatingRepo {
+public class ChatRepoIm implements ChatRepo {
 
 	@Override
-	public int addChatRoom(ChatDTO chatdto, ItemDTO itemdto) throws SQLException {
+	public int CreateChatRoom(ChatDTO chatdto, ItemDTO itemdto) throws SQLException {
 		int userNum1 = chatdto.getUser_id();
 		int userNum2 = itemdto.getProduct_id();
 		int index = 0;
@@ -20,7 +20,8 @@ public class ChatRepoIm implements ChatingRepo {
 			userNum2 = index;
 		}
 		String roomname = userNum1 + "/" + userNum2;
-		String query = " INSERT INTO chatlist VALUES (" + roomname + ", ?) ";
+		String query = " CREATE TABLE " + roomname + "    id INT AUTO_INCREMENT, " + "    chat TEXT NOT NULL, "
+				+ "    user_id INT, " + "    FOREIGN KEY (user_id) " + "        REFERENCES user (user_num " + "); ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, itemdto.getProduct_id());
@@ -64,7 +65,7 @@ public class ChatRepoIm implements ChatingRepo {
 
 	@Override
 	public int joinChatRoom(int id) throws SQLException {
-		String query = "";
+		String query = "  ";
 		return 0;
 	}
 
