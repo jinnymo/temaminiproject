@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.mysql.cj.jdbc.Blob;
+
 public class ItemRepoImpl implements ItemRepo {
 
 	@Override
@@ -54,5 +56,29 @@ public class ItemRepoImpl implements ItemRepo {
 		}
 		return product_id;
 	}
+	
+	public void getItemDTO() throws SQLException{
+		int product_id = 0;
+		String name = null;
+		String price = null;
+		byte[] image = null;
+				
+		String query = " SELECT i.product_id, product_name, price, image "
+				+ "from item as i "
+				+ "join scaled_item_image as s on i.product_id = s.product_id "
+				+ "where image_num = 1 ";
+		try (Connection conn = DBConnectionManager.getInstance().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(query)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				product_id = rs.getInt("product_id");
+				name = rs.getString("product_name");
+				price = rs.getString("price");
+				image = rs.getBytes("image");
+			}
+		}
+	}
+	
+	
 
 }
