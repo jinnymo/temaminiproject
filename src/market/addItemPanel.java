@@ -198,16 +198,16 @@ public class addItemPanel extends JPanel {
 								byte[] bigImageBytes = bufferedImageToBytes(bfIbig);
 								itemRepoImpl.addImage(productId, bigImageBytes, "original_item_image");
 								itemRepoImpl.addImage(productId, smallImageBytes, "scaled_item_image");
-
+								Thread a = new Thread();
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (SQLException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
 						}
+						
+						//여기서 이미지 패스 초기화 해야함
 
 					}
 				});

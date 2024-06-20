@@ -32,11 +32,8 @@ public class PanelAdapter extends JPanel implements ActionListener {
 	}
 
 	private void initData() {
-<<<<<<< HEAD
 
-=======
 		 
->>>>>>> main4
 		setSize(Resource.PANEL_FULL_SIZE_X, Resource.PANEL_FULL_SIZE_Y);
 		setLocation(0, 0);
 		setLayout(null);
