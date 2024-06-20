@@ -17,6 +17,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 	private JButton chatListBtn;
 	private JButton addItemBtn;
 	private JButton myInfoBtn;
+	private JButton updateBtn;
 	private ItemListPanel itemListPanel;
 	private ChatListPanel chatListPanel;
 	private addItemPanel addItemPanel;
@@ -52,10 +53,12 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		chatListBtn = new JButton("채팅버튼");
 		addItemBtn = new JButton("상품등록버튼");
 		myInfoBtn = new JButton("내정보버튼");
+		updateBtn = new JButton("새로고침버튼");
 
 		topPanel.setSize(Resource.PANEL_FULL_SIZE_X, 50);
 		searchTF.setSize(200, 30);
 		searchBtn.setSize(30, 30);
+		updateBtn.setSize(30, 30);
 		itemListBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
 		chatListBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
 		addItemBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
@@ -69,6 +72,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 
 		searchTF.setLocation(20, 10);
 		searchBtn.setLocation(300, 10);
+		updateBtn.setLocation(450, 10);
 
 		topPanel.setBackground(Color.orange);
 
@@ -79,6 +83,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		add(topPanel);
 		topPanel.add(searchTF);
 		topPanel.add(searchBtn);
+		topPanel.add(updateBtn);
 		add(itemListBtn);
 		add(chatListBtn);
 		add(addItemBtn);
@@ -101,7 +106,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		chatListBtn.addActionListener(this);
 		addItemBtn.addActionListener(this);
 		myInfoBtn.addActionListener(this);
-
+		updateBtn.addActionListener(this);
 	}
 
 	@Override
@@ -127,6 +132,8 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			chatListPanel.setVisible(false);
 			addItemPanel.setVisible(false);
 			myInfoPanel.setVisible(true);
+		} else if (e.getSource() == updateBtn) {
+			itemListPanel.revalidate();
 		}
 		revalidate();
 		repaint();
