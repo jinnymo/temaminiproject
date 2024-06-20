@@ -34,7 +34,7 @@ public class ItemRepoImpl implements ItemRepo {
 	@Override
 	public int addImage(int product_id, byte[] image, String tableName, int num) throws SQLException {
 		int rowCount = 0;
-		String query = " INSERT INTO " + tableName + " (product_id, image) VALUES(?, ?,?) ";
+		String query = " INSERT INTO " + tableName + " (product_id, image,image_num) VALUES(?, ?,?) ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, product_id);

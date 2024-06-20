@@ -208,6 +208,18 @@ public class addItemPanel extends JPanel {
 							}
 
 						}
+						bigimageIconArr = new ImageIcon[3];
+                        smallImageArr = new Image[3];
+                        bigImageArr = new Image[3];
+
+                        imagePath1 = null;
+                        imagePath2 = null;
+                        imagePath3 = null;
+
+                        scaledImgLabel1.setIcon(scaledicon);
+                        scaledImgLabel2.setIcon(scaledicon);
+                        scaledImgLabel3.setIcon(scaledicon);
+                        imageLabel.setIcon(bigicon);
 
 					}
 				});
