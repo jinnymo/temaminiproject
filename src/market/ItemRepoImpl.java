@@ -48,7 +48,7 @@ public class ItemRepoImpl implements ItemRepo {
 	@Override
 	public int getProductId(int userNum) throws SQLException {
 		int product_id = 0;
-		String query = " SELECT product_id from item WHERE user_num = ? order by date asc limit 1 ";
+		String query = " SELECT product_id from item WHERE user_num = ? order by date desc limit 1 ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, userNum);
@@ -67,7 +67,8 @@ public class ItemRepoImpl implements ItemRepo {
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
 		String query = " SELECT i.product_id, product_name, price, image " + "from item as i "
-				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1 ";
+				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1"
+						+ " order by i.date desc ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
