@@ -11,13 +11,7 @@ public class ItemRepoImpl implements ItemRepo {
 	public int addItem(String productName, String price, String state, String content, int myUserNum, int categoryId)
 			throws SQLException {
 		int rowCount = 0;
-<<<<<<< HEAD
-
 		String query = " INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) "
-
-=======
-		String query = " INSERT INTO item (product_name, price, state, date, product_info, user_num, category_ID) "
->>>>>>> MHv6
 				+ "VALUES(?, ?, ?, now(), ?, ?, ?) ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
