@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 public class ItemListPanel extends JPanel implements Runnable {
 
 	private JLabel imageLabel;
-	
+
 	public ItemListPanel() {
 
 		initData();
@@ -17,13 +17,13 @@ public class ItemListPanel extends JPanel implements Runnable {
 	}
 
 	private void initData() {
-		
+
 		setLayout(null);
 		setSize(Resource.ADP_PANEL_X, Resource.ADP_PANEL_Y);
-		setLocation(0,50);
-		
+		setLocation(0, 50);
+
 		imageLabel = new JLabel();
-		imageLabel.setSize(400,200);
+		imageLabel.setSize(400, 200);
 		imageLabel.setLocation(0, 50);
 	}
 
