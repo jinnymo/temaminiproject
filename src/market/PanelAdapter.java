@@ -41,13 +41,9 @@ public class PanelAdapter extends JPanel implements ActionListener {
 
 		itemListPanel = new ItemListPanel();
 		chatListPanel = new ChatListPanel();
-		addItemPanel = new addItemPanel();
+		addItemPanel = new addItemPanel(mContext);
 		myInfoPanel = new myInfoPanel();
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> main3
 		topPanel = new JPanel();
 		searchTF = new JTextField("검색");
 		// 나중에 JButton 사용하지 않고 이미지 아이콘으로 변경

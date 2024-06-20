@@ -12,9 +12,11 @@ public class MainFrame extends JFrame {
 	public Login loginPanel;
 	private PanelAdapter panelAdapter;
 	private UserDTO myUserDTO;
+	private ItemRepoImpl itemRepoImpl;
+	
 	public MainFrame() {
 		loginPanel = new Login(this);
-
+		itemRepoImpl = new ItemRepoImpl();
 		initData();
 		setInitLayout();
 	}

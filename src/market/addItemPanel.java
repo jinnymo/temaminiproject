@@ -1,5 +1,6 @@
 package market;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -7,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class addItemPanel extends JPanel implements Runnable {
+public class addItemPanel extends JPanel {
 
 	private LabelMouseListener labelMouseListener;
 
@@ -38,7 +40,7 @@ public class addItemPanel extends JPanel implements Runnable {
 	private JComboBox<String> categoryBox;
 
 	private JFileChooser fileSelecter = new JFileChooser();
-	private FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF & PNG Images", "jpg", "gif", "png");
+	private FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & GIF & PNG Images", "png");
 	// 재사용 불가능 todo!! [ imagePaht have to make three instance each name for
 	// imagePath1 ,imagePath2,imagePath3]
 
@@ -52,10 +54,14 @@ public class addItemPanel extends JPanel implements Runnable {
 	private Image[] smallImageArr = new Image[3];
 	private Image[] bigImageArr = new Image[3];
 
+	private MainFrame mContext;
+	private ItemRepoImpl itemRepoImpl;
 	// 재사용 가능
 	private File fileUrl = null;
 
-	public addItemPanel() {
+	public addItemPanel(MainFrame mContext) {
+		this.mContext = mContext;
+		this.itemRepoImpl = this.mContext.getItemRepoImpl();
 		categoryBox = new JComboBox<>();
 		categoryBox.addItem("의류");
 		categoryBox.addItem("전자기기");
@@ -145,11 +151,6 @@ public class addItemPanel extends JPanel implements Runnable {
 		submitBtn.addMouseListener(labelMouseListener);
 	}
 
-	@Override
-	public void run() {
-
-	}
-
 	class LabelMouseListener extends MouseAdapter {
 
 		@Override
@@ -165,56 +166,87 @@ public class addItemPanel extends JPanel implements Runnable {
 				imagePath3 = getImagePath();
 				scaledImgLabel3.setIcon(getScaledIcon(imagePath3, 2));
 			} else if (e.getSource() == submitBtn) {
+
 				Thread push = new Thread(new Runnable() {
 
 					@Override
 					public void run() {
+						UserDTO myUserDTO = mContext.getMyUserDTO();
+						int userNum = myUserDTO.getUser_num();
+						int productId = 0;
+						String productName = titleTF.getText();
+						String price = priceTF.getText();
+						String state = "판매중";
+						String content = contentTF.getText();
+						int myUserNum = userNum;
+						int categoryId = categoryBox.getSelectedIndex() + 1;
+
+						try {
+							itemRepoImpl.addItem(productName, price, state, content, myUserNum, categoryId);
+							productId = itemRepoImpl.getProductId(myUserNum);
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						System.out.println(smallImageArr[0].toString());
 						for (int i = 0; i < 3; i++) {
 							BufferedImage bfIsmall = toBufferedImage(smallImageArr[i]);
 							BufferedImage bfIbig = toBufferedImage(bigImageArr[i]);
 							try {
 								byte[] smallImageBytes = bufferedImageToBytes(bfIsmall);
 								byte[] bigImageBytes = bufferedImageToBytes(bfIbig);
+								itemRepoImpl.addImage(productId, bigImageBytes, "original_item_image");
+								itemRepoImpl.addImage(productId, smallImageBytes, "scaled_item_image");
+
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-						
+
 						}
 
 					}
 				});
+				push.start();
 			}
 
 		}
 
-		private  byte[] bufferedImageToBytes(BufferedImage bufferedImage) throws IOException {
+		private byte[] bufferedImageToBytes(BufferedImage bufferedImage) throws IOException {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImage, "png", baos);
 			return baos.toByteArray();
 		}
-	
 
-	// null point 예상
-	private  BufferedImage toBufferedImage(Image img) {
-		if (img instanceof BufferedImage) {
-			return (BufferedImage) img;
+		// null point 예상
+		private BufferedImage toBufferedImage(Image image) {
+
+			System.out.println("Asdfiu;hoesfwar;jiuk;h");
+			BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
+					BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2d = bufferedImage.createGraphics();
+			g2d.drawImage(image, 0, 0, null);
+			g2d.dispose();
+			return  bufferedImage;
+
 		}
-		return null;
-	}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		if (e.getSource() == scaledImgLabel1) {
-			imageLabel.setIcon(bigimageIconArr[0]);
-		} else if (e.getSource() == scaledImgLabel2) {
-			imageLabel.setIcon(bigimageIconArr[1]);
-		} else if (e.getSource() == scaledImgLabel3) {
-			imageLabel.setIcon(bigimageIconArr[2]);
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			if (e.getSource() == scaledImgLabel1) {
+				imageLabel.setIcon(bigimageIconArr[0]);
+			} else if (e.getSource() == scaledImgLabel2) {
+				imageLabel.setIcon(bigimageIconArr[1]);
+			} else if (e.getSource() == scaledImgLabel3) {
+				imageLabel.setIcon(bigimageIconArr[2]);
+			}
 		}
-	}
 
-}
+	}
 
 	public String getImagePath() {
 		int tempCount = fileSelecter.showOpenDialog(getParent());
