@@ -27,7 +27,10 @@ import lombok.Data;
 
 @Data
 class ItemListPanel extends JPanel implements ListSelectionListener {
+	
 	private MainFrame mContext;
+	private PanelAdapter panelAdapter;
+	
 	private JList<ItemListDTO> listItemDTO;
 	private DefaultListModel<ItemListDTO> model;
 	private ItemRepoImpl itemRepoImpl;
@@ -35,9 +38,11 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private JPanel jPanel;
 	private JScrollPane jsPane;
 	private int product_id;
+	ItemDetilPanel itemDetilPanel;
 
-	public ItemListPanel(MainFrame mContext) {
+	public ItemListPanel(MainFrame mContext,PanelAdapter panelAdapter) {
 		this.mContext = mContext;
+		this.panelAdapter = panelAdapter;
 		this.itemRepoImpl = mContext.getItemRepoImpl();
 		initData();
 		setInitLayout();
@@ -105,9 +110,10 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	            ItemListDTO selectedItem = listItemDTO.getSelectedValue();
 	            if (selectedItem != null) {
 	            	product_id = selectedItem.getProductId();
+	            	itemDetilPanel = new ItemDetilPanel(mContext.getMyUserDTO() ,product_id, itemRepoImpl,panelAdapter);
 	                // 선택된 아이템을 여기서 처리합니다.
 	                // TODO 상품 id  멤버변수에 저장 . //-> 사용할때마다 계속 생성 x , 덮어쓰는것.
-	           
+	            	panelAdapter.addItemDetailPanel(itemDetilPanel);
 	            }
 	        }
 	}

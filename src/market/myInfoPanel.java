@@ -1,6 +1,7 @@
 package market;
 
 import java.awt.Color;
+import java.awt.TextField;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,6 +22,8 @@ public class myInfoPanel extends JPanel implements Runnable{
 	private JButton reviceBtn; //수정
 	private JLabel reviceLbl;
 	private JPanel itemListPanel; // 라벨
+	private TextField updatePassword;
+	private TextField updateName;
 	
 
 	public myInfoPanel() {
@@ -50,10 +53,10 @@ public class myInfoPanel extends JPanel implements Runnable{
 
 	private void setInitLayout() {
 		setBackground(Color.gray);
-	//	add(reviceLbl);
-	//	add(reviceBtn);
+		add(reviceLbl);
+		add(reviceBtn);
 		add(mypagePanel);
-		
+
 
 	}
 

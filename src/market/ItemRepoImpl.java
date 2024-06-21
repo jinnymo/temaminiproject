@@ -90,7 +90,7 @@ public class ItemRepoImpl implements ItemRepo {
 
 	@Override
 	public ItemDetailDTO getItemDetailDTO(int id) throws SQLException {
-		int product_id = 0;
+		int product_id = id;
 		String product_name = null;
 		String price = null;
 		String state = null;
@@ -106,16 +106,21 @@ public class ItemRepoImpl implements ItemRepo {
 		byte[] bImage = null;
 
 		List<ItemDetailDTO> itemDetailDTOs = new ArrayList<>();
-		String userQuery = " SELECT i.product_id, product_name, price, state, date, product_info, u.user_num, u.user_id"
-				+ "FROM item AS i JOIN user AS u ON i.user_num = u.user_num\r\n" + "WHERE i.product_id = ? ";
-		String smallQuery = " SELECT image FROM item AS i "
-				+ "JOIN scaled_item_image AS s ON i.product_id = s.product_id WHERE i.product_id = ? ";
+		String userQuery = " SELECT i.product_id, product_name, price, state, date, product_info, u.user_num, u.user_id "
+				+ " FROM item AS i JOIN user AS u ON i.user_num = u.user_num WHERE i.product_id = ? ";
+		String smallQuery = " SELECT s.image FROM item AS i "
+				+ " JOIN scaled_item_image AS s ON i.product_id = s.product_id WHERE i.product_id = ? ";
 		String bigQuery = " SELECT image FROM item AS i "
-				+ "JOIN original_item_image AS o ON i.product_id = o.product_id WHERE i.product_id = ? ";
+				+ " JOIN original_item_image AS o ON i.product_id = o.product_id WHERE i.product_id = ? ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmtUser = conn.prepareStatement(userQuery);
 				PreparedStatement pstmtSmall = conn.prepareStatement(smallQuery);
 				PreparedStatement pstmtBig = conn.prepareStatement(bigQuery)) {
+
+			pstmtUser.setInt(1, product_id);
+			pstmtSmall.setInt(1, product_id);
+			pstmtBig.setInt(1, product_id);
+
 			ResultSet rsU = pstmtUser.executeQuery();
 			ResultSet rsS = pstmtSmall.executeQuery();
 			ResultSet rsB = pstmtBig.executeQuery();
@@ -130,14 +135,13 @@ public class ItemRepoImpl implements ItemRepo {
 				user_num = rsU.getInt("user_num");
 				user_id = rsU.getString("user_id");
 			}
-
 			while (rsS.next()) {
 				sImage = rsS.getBytes("image");
 				sImageList.add(sImage);
-				if (rsB.next()) {
-					bImage = rsB.getBytes("image");
-					bImageList.add(bImage);
-				}
+			}
+			while (rsB.next()) {
+				bImage = rsB.getBytes("image");
+				bImageList.add(bImage);
 			}
 
 		}
