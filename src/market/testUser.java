@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class testUser {
 	private static final String ADD_USER = " insert into user(user_id, name, password) values(?, ?, ?)  ";
-
+	
 	public static void main(String[] args) {
 		testUser tester = new testUser();
 		try {

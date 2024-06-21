@@ -4,55 +4,77 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class testItem extends JPanel{
+public class testItem extends JPanel {
 	Image[] bigArr = new Image[3];
 	Image[] smallArr = new Image[3];
+
+	// DBConnectionManager 및 userIdQuery는 아래 예시로 추가된 부분입니다.
+	private static final String userIdQuery = "SELECT user_num FROM user"; // 실제 쿼리에 맞게 수정 필요
+
 	public static void main(String[] args) {
 		new testItem();
-		
+		System.out.println("생성 끝");
 	}
+
 	public testItem() {
 		try {
 			testInsetitem();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void testInsetitem() throws SQLException {
 		int product_id = 0;
-		getScaledIcon("img/image1.png", 0);
-		getScaledIcon("img/image2.png", 1);
-		getScaledIcon("img/image3.png", 2);
+		if (!getScaledIcon("img/image1.png", 0) || !getScaledIcon("img/image2.png", 1)
+				|| !getScaledIcon("img/image3.png", 2)) {
+			System.err.println("이미지 로딩 실패");
+			return;
+		}
 
 		List<byte[]> big = new ArrayList<>();
 		List<byte[]> small = new ArrayList<>();
-		
-		System.out.println(bigArr.length);
-		for (int i = 0; i < 3; i++) {
-			big.add(toByte(bigArr[i]));
-			small.add(toByte(smallArr[i]));
+		List<Integer> usernum = new ArrayList<>();
+
+		try (Connection conn = DBConnectionManager.getInstance().getConnection();
+				PreparedStatement userNumPstmt = conn.prepareStatement(userIdQuery);
+				ResultSet rs = userNumPstmt.executeQuery()) {
+
+			while (rs.next()) {
+				usernum.add(rs.getInt("user_num"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		for (int t = 4; t < 100; t++) {
-			String query = " INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) "
-					+ "	VALUES(?, ?, ?, now(), ?, ?, ?) ";
-			String productidQuery = " SELECT product_id from item WHERE user_num = 3 order by date desc limit 1 ";
-			String bImagequery = " INSERT INTO original_item_image (product_id, image, image_num) VALUES(?, ?, ?) ";
-			String sImagequery = " INSERT INTO scaled_item_image (product_id, image, image_num) VALUES(?, ?, ?) ";
+
+		for (int i = 0; i < 3; i++) {
+			byte[] bigImageBytes = toByte(bigArr[i]);
+			byte[] smallImageBytes = toByte(smallArr[i]);
+			if (bigImageBytes == null || smallImageBytes == null) {
+				System.err.println("이미지를 바이트 배열로 변환하는데 실패했습니다.");
+				return;
+			}
+			big.add(bigImageBytes);
+			small.add(smallImageBytes);
+		}
+
+		for (Integer userNum : usernum) {
+			String query = "INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) VALUES(?, ?, ?, now(), ?, ?, ?)";
+			String productidQuery = "SELECT product_id FROM item WHERE user_num = ? ORDER BY date DESC LIMIT 1";
+			String bImagequery = "INSERT INTO original_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
+			String sImagequery = "INSERT INTO scaled_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
+
 			try (Connection conn = DBConnectionManager.getInstance().getConnection();
 					PreparedStatement userPstmt = conn.prepareStatement(query);
 					PreparedStatement bIamgePstmt = conn.prepareStatement(bImagequery);
@@ -63,13 +85,14 @@ public class testItem extends JPanel{
 				userPstmt.setString(2, "1000");
 				userPstmt.setString(3, "테스트 중");
 				userPstmt.setString(4, "테스트 아이템 입니다.");
-				userPstmt.setInt(5, t);
+				userPstmt.setInt(5, userNum);
 				userPstmt.setInt(6, 1);
 				userPstmt.executeUpdate();
+
+				productIdPstmt.setInt(1, userNum);
 				ResultSet set = productIdPstmt.executeQuery();
 				if (set.next()) {
 					product_id = set.getInt("product_id");
-
 				}
 
 				for (int k = 0; k < 3; k++) {
@@ -83,25 +106,41 @@ public class testItem extends JPanel{
 					sImagePstmt.setInt(3, k + 1);
 					sImagePstmt.executeUpdate();
 				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
-
 	}
 
-	public void getScaledIcon(String imagepath, int index) {
-		ImageIcon tempImg = new ImageIcon(imagepath);
-		Image smallImage = tempImg.getImage().getScaledInstance(100, 70, Image.SCALE_FAST);
-		Image bigImage = tempImg.getImage().getScaledInstance(300, 210, Image.SCALE_FAST);
-		bigArr[index] = bigImage;
-		smallArr[index] = smallImage;
-
+	public boolean getScaledIcon(String imagepath, int index) {
+		try {
+			BufferedImage originalImage = ImageIO.read(new File(imagepath));
+			if (originalImage == null) {
+				System.err.println("이미지 로딩 실패: " + imagepath);
+				return false;
+			}
+			Image smallImage = originalImage.getScaledInstance(100, 70, Image.SCALE_SMOOTH);
+			Image bigImage = originalImage.getScaledInstance(300, 210, Image.SCALE_SMOOTH);
+			bigArr[index] = bigImage;
+			smallArr[index] = smallImage;
+			return true;
+		} catch (IOException e) {
+			System.err.println("IOException: " + e.getMessage());
+			return false;
+		}
 	}
 
-	// null point 예상
 	private byte[] toByte(Image image) {
-		System.out.println(image.toString());
-		BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
-				BufferedImage.TYPE_INT_ARGB);
+		if (image == null) {
+			throw new IllegalArgumentException("이미지가 null입니다.");
+		}
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		if (width <= 0 || height <= 0) {
+			throw new IllegalArgumentException("이미지의 너비와 높이가 유효하지 않습니다: " + width + "x" + height);
+		}
+
+		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = bufferedImage.createGraphics();
 		g2d.drawImage(image, 0, 0, null);
 		g2d.dispose();
@@ -110,11 +149,9 @@ public class testItem extends JPanel{
 		try {
 			ImageIO.write(bufferedImage, "png", baos);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		return baos.toByteArray();
-
 	}
-
 }
