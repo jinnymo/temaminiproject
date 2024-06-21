@@ -38,20 +38,38 @@ class ItemListPanel extends JPanel {
 		this.itemRepoImpl = mContext.getItemRepoImpl();
 		initData();
 		setInitLayout();
-		upDateList();
-	}
-
-	public void upDateList() {
-		model.clear();
 		try {
-			itemListDTOs = itemRepoImpl.getItemDTO();
+			itemListDTOs = itemRepoImpl.getItemDTO(0);
 			for (ItemListDTO itemListDTO : itemListDTOs) {
 				model.addElement(itemListDTO);
 				listItemDTO.setCellRenderer(new ItemListDTORenderer());
 			}
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void upDateList() {
+		// 아이템 리스트 업데이트 부분 수정완료
+		// 기존 전체 모델 지우고 다시 불러오는 방법에서
+		// 현재 표시되고 있는 마지막 아이템의 id를 기준으로 db에서 검색후
+		// 새롭게 올라온 아이템만 업데이트 하는 방식
+		// 발표에 이기능 설명 들어가야함
+
+		int lastItemNum = model.get(0).getProductId();
+		try {
+			itemListDTOs = itemRepoImpl.getItemDTO(lastItemNum);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (ItemListDTO itemListDTO : itemListDTOs) {
+			model.add(0,itemListDTO);
+			listItemDTO.setCellRenderer(new ItemListDTORenderer());
+		}
+
 	}
 
 	private void initData() {

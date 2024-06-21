@@ -59,25 +59,29 @@ public class ItemRepoImpl implements ItemRepo {
 	}
 
 	@Override
-	public List<ItemListDTO> getItemDTO() throws SQLException {
-		int product_id = 0;
+	public List<ItemListDTO> getItemDTO(int productNum) throws SQLException {
+		
+		int userNum = 0;
+		int productId = 0;
 		String name = null;
 		String price = null;
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
-		String query = " SELECT i.product_id, product_name, price, image " + "from item as i "
-				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where image_num = 1"
-				+ " order by i.date desc ";
+		String query = " SELECT i.user_num,i.product_id, i.product_name, i.price, s.image " + "from item as i "
+				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where s.image_num = 1"
+				+ " and i.product_id > ? order by i.date desc ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setInt(1, productNum);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				product_id = rs.getInt("product_id");
+				userNum = rs.getInt("user_num");
+				productId = rs.getInt("product_id");
 				name = rs.getString("product_name");
 				price = rs.getString("price");
 				image = rs.getBytes("image");
 				// TODO DTO 입력 -> JList
-				itemListDTOs.add(new ItemListDTO(product_id, name, price, image));
+				itemListDTOs.add(new ItemListDTO(userNum,productId, name, price, image));
 			}
 		}
 		return itemListDTOs;
