@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 public class myInfoPanel extends JPanel implements ActionListener {
 
 	private MainFrame mContext;
-	private UserInfoRepoIm userInfoRepoIm;
+	private UserInfoRepoIm userInfoRepoIm;	
 
 	private JButton reviceBtn; // 수정 버튼
 	private JLabel reviceLbl; // "회원정보 수정" 라벨
