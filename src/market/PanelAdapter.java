@@ -23,7 +23,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 	private addItemPanel addItemPanel;
 	private myInfoPanel myInfoPanel;
 	private MainFrame mContext;
-
+	private ChatPanel cPanel;
 	public PanelAdapter(MainFrame mContext) {
 		this.mContext = mContext;
 		initData();
@@ -116,10 +116,30 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		updateBtn.setEnabled(false);
 	}
 	public void startChat(int roomId) {
-		endItemDetailPanel();
-		itemListPanel.setVisible(false);
-		add(new ChatPanel(roomId));
+		startChatControlPanel();	
+		cPanel = new ChatPanel(roomId,this);
+		add(cPanel);
+		Thread temp = new Thread(cPanel);
+		temp.start();
 		
+		
+	}
+	public void endChat() {
+		endItemDetailPanel();
+		cPanel = null;
+	}
+	public void startChatControlPanel() {
+		itemListPanel.setVisible(false);
+		chatListPanel.setVisible(false);
+		addItemPanel.setVisible(false);
+		myInfoPanel.setVisible(false);
+
+		searchBtn.setEnabled(false);
+		itemListBtn.setEnabled(false);
+		chatListBtn.setEnabled(false);
+		addItemBtn.setEnabled(false);
+		myInfoBtn.setEnabled(false);
+		updateBtn.setEnabled(false);
 	}
 
 	public void endItemDetailPanel() {

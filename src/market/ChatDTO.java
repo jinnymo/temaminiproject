@@ -13,7 +13,7 @@ import lombok.ToString;
 @Builder
 public class ChatDTO {
 
-	private String id;
-	private int user_id;
+	private int id;
+	private String content;
 
 }

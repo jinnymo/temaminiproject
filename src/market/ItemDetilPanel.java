@@ -224,8 +224,11 @@ public class ItemDetilPanel extends JPanel {
 					} else {
 						// 기존에 대화 하던 방이 없는경우
 						// 채팅방 만들기
+					
 						roomId = new ChatRepoIm().newChatRoom(chatroomName, myNum, sellerNum);
 					}  
+					setVisible(false);
+					System.out.println(roomId);
 					panelAdapter.startChat(roomId);
 
 				} catch (SQLException e1) {

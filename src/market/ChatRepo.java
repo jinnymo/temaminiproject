@@ -15,9 +15,8 @@ public interface ChatRepo {
 
 	List<ChatDTO> SearchChatList(int user_num) throws SQLException;
 
-	int joinChatRoom(int id) throws SQLException;
+	List<ChatDTO> getChat(int roomId) throws SQLException;
 	
-	
-
+	int addChat(int roomId,String content) throws SQLException;
 }
  
