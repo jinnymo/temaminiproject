@@ -40,7 +40,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		setBackground(Color.blue);
 		setVisible(true);
 
-		itemListPanel = new ItemListPanel(mContext);
+		itemListPanel = new ItemListPanel(mContext, this);
 		chatListPanel = new ChatListPanel();
 		addItemPanel = new addItemPanel(mContext);
 		myInfoPanel = new myInfoPanel();
@@ -99,6 +99,41 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		addItemPanel.setVisible(false);
 		myInfoPanel.setVisible(false);
 
+	}
+
+	public void addItemDetailPanel(ItemDetilPanel itemDetilPanel) {
+		itemListPanel.setVisible(false);
+		chatListPanel.setVisible(false);
+		addItemPanel.setVisible(false);
+		myInfoPanel.setVisible(false);
+		add(itemDetilPanel);
+
+		searchBtn.setEnabled(false);
+		itemListBtn.setEnabled(false);
+		chatListBtn.setEnabled(false);
+		addItemBtn.setEnabled(false);
+		myInfoBtn.setEnabled(false);
+		updateBtn.setEnabled(false);
+	}
+	public void startChat(int roomId) {
+		endItemDetailPanel();
+		itemListPanel.setVisible(false);
+		add(new ChatPanel(roomId));
+		
+	}
+
+	public void endItemDetailPanel() {
+		itemListPanel.setVisible(true);
+		chatListPanel.setVisible(false);
+		addItemPanel.setVisible(false);
+		myInfoPanel.setVisible(false);
+
+		searchBtn.setEnabled(true);
+		itemListBtn.setEnabled(true);
+		chatListBtn.setEnabled(true);
+		addItemBtn.setEnabled(true);
+		myInfoBtn.setEnabled(true);
+		updateBtn.setEnabled(true);
 	}
 
 	private void addEventListener() {
