@@ -40,6 +40,7 @@ public class ItemDetilPanel extends JPanel {
 	private JLabel scaledImgLabel3;
 	private JLabel imageLabel;
 	private JLabel nameLabel;
+	private JLabel dateLabel;
 	private JLabel priceLabel;
 	private JTextArea descriptionField;
 	private JLabel separatorLabel;
@@ -89,6 +90,7 @@ public class ItemDetilPanel extends JPanel {
 
 		priceLabel = new JLabel();
 		nameLabel = new JLabel();
+		dateLabel = new JLabel();
 		separatorLabel = new JLabel();
 		descriptionField = new JTextArea();
 
@@ -134,8 +136,12 @@ public class ItemDetilPanel extends JPanel {
 
 		// 텍스트 라벨들
 		nameLabel.setText(itemDetailDTO.getProduct_name());
-		nameLabel.setSize(360, 30);
+		nameLabel.setSize(250, 30);
 		nameLabel.setLocation(20, 230);
+		
+		dateLabel.setText(itemDetailDTO.getDate());
+		dateLabel.setSize(150, 30);
+		dateLabel.setLocation(260 ,230);
 
 		priceLabel.setText(itemDetailDTO.getPrice());
 		priceLabel.setSize(360, 30);
@@ -168,6 +174,7 @@ public class ItemDetilPanel extends JPanel {
 		add(scaledImgLabel3);
 		add(imageLabel);
 		add(nameLabel);
+		add(dateLabel);
 		add(priceLabel);
 		add(separatorLabel);
 		add(descriptionField);
@@ -212,8 +219,8 @@ public class ItemDetilPanel extends JPanel {
 					int roomId = 0;
 					if ((roomId = new ChatRepoIm().checkChatRoom(chatroomName)) != 0) {
 						// 기존에 대화하던 방이 있는 경우
-						// roomid 를 사용해서 기존 대화 불러오기
-
+		 				// roomid 를 사용해서 기존 대화 불러오기
+ 
 					} else {
 						// 기존에 대화 하던 방이 없는경우
 						// 채팅방 만들기

@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 public class MainFrame extends JFrame {
-
+ 
 	public Login loginPanel;
 	private PanelAdapter panelAdapter;
 	private UserDTO myUserDTO;
@@ -54,6 +54,7 @@ public class MainFrame extends JFrame {
 
 	public static void main(String[] args) {
 		new MainFrame();
+		
 	}
 
 }

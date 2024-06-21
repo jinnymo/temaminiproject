@@ -89,7 +89,7 @@ public class ChatRepoIm implements ChatRepo {
 		// TODO Auto-generated method stub
 		return 0;
 	}
- 
+   
 	@Override
 	public int checkChatRoom(String chatroom_id) throws SQLException {
 		String query1 = " select * from chatroomidlist where chatroom_id = ? ";
