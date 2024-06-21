@@ -86,7 +86,6 @@ public class myInfoPanel extends JPanel implements ActionListener {
 			String Password = revicePassText.getText();
 			String userId = mContext.getMyUserDTO().getUser_id();
 			try {
-				System.out.println("name : " + name + " Pass : " + Password + " user_id : " + userId);
 				userInfoRepoIm.updateUserInfo(name, Password, userId);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
