@@ -43,7 +43,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		itemListPanel = new ItemListPanel(mContext, this);
 		chatListPanel = new ChatListPanel();
 		addItemPanel = new addItemPanel(mContext);
-		myInfoPanel = new myInfoPanel();
+		myInfoPanel = new myInfoPanel(mContext);
 
 		topPanel = new JPanel();
 		searchTF = new JTextField("검색");
@@ -145,7 +145,6 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			chatListPanel.setVisible(false);
 			addItemPanel.setVisible(false);
 			myInfoPanel.setVisible(false);
-
 		} else if (e.getSource() == chatListBtn) {
 			itemListPanel.setVisible(false);
 			chatListPanel.setVisible(true);
