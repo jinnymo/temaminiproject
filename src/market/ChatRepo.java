@@ -2,7 +2,7 @@ package market;
 
 import java.sql.SQLException;
 import java.util.List;
-
+ 
 public interface ChatRepo {
 	
 	int checkChatRoom(String chatroom_id)throws SQLException;

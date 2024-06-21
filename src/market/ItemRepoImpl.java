@@ -11,7 +11,7 @@ public class ItemRepoImpl implements ItemRepo {
 
 	@Override
 	public int addItem(String productName, String price, String state, String content, int myUserNum, int categoryId)
-			throws SQLException { 
+			throws SQLException {  
 		int rowCount = 0;
 		String query = " INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) "
 				+ "VALUES(?, ?, ?, now(), ?, ?, ?) ";

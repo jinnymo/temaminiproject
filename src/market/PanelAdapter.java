@@ -151,7 +151,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			chatListPanel.setVisible(false);
 			addItemPanel.setVisible(false);
 			myInfoPanel.setVisible(false);
-
+ 
 		} else if (e.getSource() == chatListBtn) {
 			itemListPanel.setVisible(false);
 			chatListPanel.setVisible(true);
