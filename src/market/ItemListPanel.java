@@ -20,11 +20,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import lombok.Data;
 
 @Data
-class ItemListPanel extends JPanel {
+class ItemListPanel extends JPanel implements ListSelectionListener {
 	private MainFrame mContext;
 	private JList<ItemListDTO> listItemDTO;
 	private DefaultListModel<ItemListDTO> model;
@@ -32,6 +34,7 @@ class ItemListPanel extends JPanel {
 	private List<ItemListDTO> itemListDTOs;
 	private JPanel jPanel;
 	private JScrollPane jsPane;
+	private int product_id;
 
 	public ItemListPanel(MainFrame mContext) {
 		this.mContext = mContext;
@@ -48,6 +51,7 @@ class ItemListPanel extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		  listItemDTO.addListSelectionListener(this);
 	}
 
 	public void upDateList() {
@@ -66,7 +70,7 @@ class ItemListPanel extends JPanel {
 		}
 
 		for (ItemListDTO itemListDTO : itemListDTOs) {
-			model.add(0,itemListDTO);
+			model.add(0, itemListDTO);
 			listItemDTO.setCellRenderer(new ItemListDTORenderer());
 		}
 
@@ -95,8 +99,17 @@ class ItemListPanel extends JPanel {
 		return list;
 	}
 
-	public ItemListDTO getSelectedItem() {
-		return listItemDTO.getSelectedValue();
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		 if (!e.getValueIsAdjusting()) {  
+	            ItemListDTO selectedItem = listItemDTO.getSelectedValue();
+	            if (selectedItem != null) {
+	            	product_id = selectedItem.getProductId();
+	                // 선택된 아이템을 여기서 처리합니다.
+	                // TODO 상품 id  멤버변수에 저장 . //-> 사용할때마다 계속 생성 x , 덮어쓰는것.
+	           
+	            }
+	        }
 	}
 
 	@Data
