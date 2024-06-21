@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
 		setSize(Resource.FRAMESIZE_X, Resource.FRAMESIZE_Y);
 		setBackground(Color.black);
 	}
-
+ 
 	private void setInitLayout() {
 		setLayout(null); // 좌표 기준으로 설정
 		setLocation(0, 0);

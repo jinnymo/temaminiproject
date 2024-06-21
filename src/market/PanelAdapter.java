@@ -143,7 +143,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		myInfoBtn.addActionListener(this);
 		updateBtn.addActionListener(this);
 	}
-
+  
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == itemListBtn) {
