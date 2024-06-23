@@ -12,7 +12,9 @@ public interface ItemRepo {
 
 	int getProductId(int userNum) throws SQLException;
 
-	List<ItemListDTO> getItemDTO(int productNum) throws SQLException;
+	// List<ItemListDTO> getItemDTO(int productNum) throws SQLException;
 
 	ItemDetailDTO getItemDetailDTO(int id) throws SQLException;
+
+	List<ItemListDTO> getItemDTO(int productNum, int offset, int pageSize) throws SQLException;
 }

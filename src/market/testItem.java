@@ -18,16 +18,20 @@ import javax.swing.JPanel;
 public class testItem extends JPanel {
 	Image[] bigArr = new Image[3];
 	Image[] smallArr = new Image[3];
+	private int repeatCount;  // 반복 횟수 저장 변수 추가
 
 	// DBConnectionManager 및 userIdQuery는 아래 예시로 추가된 부분입니다.
 	private static final String userIdQuery = "SELECT user_num FROM user"; // 실제 쿼리에 맞게 수정 필요
 
 	public static void main(String[] args) {
-		new testItem();
+		// 생성자에 반복 횟수를 전달
+		new testItem(100);
 		System.out.println("생성 끝");
 	}
 
-	public testItem() {
+	// 생성자에서 반복 횟수 받기
+	public testItem(int repeatCount) {
+		this.repeatCount = repeatCount;
 		try {
 			testInsetitem();
 		} catch (SQLException e) {
@@ -70,44 +74,46 @@ public class testItem extends JPanel {
 		}
 
 		for (Integer userNum : usernum) {
-			String query = "INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) VALUES(?, ?, ?, now(), ?, ?, ?)";
-			String productidQuery = "SELECT product_id FROM item WHERE user_num = ? ORDER BY date DESC LIMIT 1";
-			String bImagequery = "INSERT INTO original_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
-			String sImagequery = "INSERT INTO scaled_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
+			for (int j = 0; j < repeatCount; j++) {  // 반복 횟수 조절
+				String query = "INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) VALUES(?, ?, ?, now(), ?, ?, ?)";
+				String productidQuery = "SELECT product_id FROM item WHERE user_num = ? ORDER BY date DESC LIMIT 1";
+				String bImagequery = "INSERT INTO original_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
+				String sImagequery = "INSERT INTO scaled_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
 
-			try (Connection conn = DBConnectionManager.getInstance().getConnection();
-					PreparedStatement userPstmt = conn.prepareStatement(query);
-					PreparedStatement bIamgePstmt = conn.prepareStatement(bImagequery);
-					PreparedStatement sImagePstmt = conn.prepareStatement(sImagequery);
-					PreparedStatement productIdPstmt = conn.prepareStatement(productidQuery)) {
+				try (Connection conn = DBConnectionManager.getInstance().getConnection();
+						PreparedStatement userPstmt = conn.prepareStatement(query);
+						PreparedStatement bIamgePstmt = conn.prepareStatement(bImagequery);
+						PreparedStatement sImagePstmt = conn.prepareStatement(sImagequery);
+						PreparedStatement productIdPstmt = conn.prepareStatement(productidQuery)) {
 
-				userPstmt.setString(1, "테스트");
-				userPstmt.setString(2, "1000");
-				userPstmt.setString(3, "테스트 중");
-				userPstmt.setString(4, "테스트 아이템 입니다.");
-				userPstmt.setInt(5, userNum);
-				userPstmt.setInt(6, 1);
-				userPstmt.executeUpdate();
+					userPstmt.setString(1, "테스트");
+					userPstmt.setString(2, "1000");
+					userPstmt.setString(3, "테스트 중");
+					userPstmt.setString(4, "테스트 아이템 입니다.");
+					userPstmt.setInt(5, userNum);
+					userPstmt.setInt(6, 1);
+					userPstmt.executeUpdate();
 
-				productIdPstmt.setInt(1, userNum);
-				ResultSet set = productIdPstmt.executeQuery();
-				if (set.next()) {
-					product_id = set.getInt("product_id");
+					productIdPstmt.setInt(1, userNum);
+					ResultSet set = productIdPstmt.executeQuery();
+					if (set.next()) {
+						product_id = set.getInt("product_id");
+					}
+
+					for (int k = 0; k < 3; k++) {
+						bIamgePstmt.setInt(1, product_id);
+						bIamgePstmt.setBytes(2, big.get(k));
+						bIamgePstmt.setInt(3, k + 1);
+						bIamgePstmt.executeUpdate();
+
+						sImagePstmt.setInt(1, product_id);
+						sImagePstmt.setBytes(2, small.get(k));
+						sImagePstmt.setInt(3, k + 1);
+						sImagePstmt.executeUpdate();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-
-				for (int k = 0; k < 3; k++) {
-					bIamgePstmt.setInt(1, product_id);
-					bIamgePstmt.setBytes(2, big.get(k));
-					bIamgePstmt.setInt(3, k + 1);
-					bIamgePstmt.executeUpdate();
-
-					sImagePstmt.setInt(1, product_id);
-					sImagePstmt.setBytes(2, small.get(k));
-					sImagePstmt.setInt(3, k + 1);
-					sImagePstmt.executeUpdate();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		}
 	}

@@ -9,9 +9,9 @@ import java.util.List;
 
 public class ItemRepoImpl implements ItemRepo {
 
-	@Override 
+	@Override
 	public int addItem(String productName, String price, String state, String content, int myUserNum, int categoryId)
-			throws SQLException {  
+			throws SQLException {
 		int rowCount = 0;
 		String query = " INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) "
 				+ "VALUES(?, ?, ?, now(), ?, ?, ?) ";
@@ -59,20 +59,23 @@ public class ItemRepoImpl implements ItemRepo {
 	}
 
 	@Override
-	public List<ItemListDTO> getItemDTO(int productNum) throws SQLException {
-
+	public List<ItemListDTO> getItemDTO(int productNum, int offset, int pageSize) throws SQLException {
 		int userNum = 0;
 		int productId = 0;
 		String name = null;
 		String price = null;
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
-		String query = " SELECT i.user_num,i.product_id, i.product_name, i.price, s.image " + "from item as i "
-				+ "join scaled_item_image as s on i.product_id = s.product_id " + "where s.image_num = 1"
-				+ " and i.product_id > ? order by i.date desc ";
+
+		String query = "SELECT i.user_num, i.product_id, i.product_name, i.price, s.image " + "FROM item AS i "
+				+ "JOIN scaled_item_image AS s ON i.product_id = s.product_id " + "WHERE s.image_num = 1 "
+				+ "AND i.product_id > ? " + "ORDER BY i.date DESC " + "LIMIT ? OFFSET ?";
+
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, productNum);
+			pstmt.setInt(2, pageSize);
+			pstmt.setInt(3, offset);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				userNum = rs.getInt("user_num");
@@ -80,12 +83,10 @@ public class ItemRepoImpl implements ItemRepo {
 				name = rs.getString("product_name");
 				price = rs.getString("price");
 				image = rs.getBytes("image");
-				// TODO DTO 입력 -> JList
 				itemListDTOs.add(new ItemListDTO(userNum, productId, name, price, image));
 			}
 		}
 		return itemListDTOs;
-
 	}
 
 	@Override

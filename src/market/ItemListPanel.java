@@ -1,36 +1,26 @@
 package market;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.Image;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.util.concurrent.ExecutionException;
 
 import lombok.Data;
 
 @Data
 class ItemListPanel extends JPanel implements ListSelectionListener {
-	
+
 	private MainFrame mContext;
 	private PanelAdapter panelAdapter;
-	
+
 	private JList<ItemListDTO> listItemDTO;
 	private DefaultListModel<ItemListDTO> model;
 	private ItemRepoImpl itemRepoImpl;
@@ -40,45 +30,61 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private int product_id;
 	ItemDetilPanel itemDetilPanel;
 
-	public ItemListPanel(MainFrame mContext,PanelAdapter panelAdapter) {
+	private int currentPage = 0;
+	private static final int PAGE_SIZE = 10;
+
+	public ItemListPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
 		this.panelAdapter = panelAdapter;
 		this.itemRepoImpl = mContext.getItemRepoImpl();
 		initData();
 		setInitLayout();
-		try {
-			itemListDTOs = itemRepoImpl.getItemDTO(0);
-			for (ItemListDTO itemListDTO : itemListDTOs) {
-				model.addElement(itemListDTO);
-				listItemDTO.setCellRenderer(new ItemListDTORenderer());
+		loadItems(currentPage);
+
+		jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
+			if (!e.getValueIsAdjusting()
+					&& e.getValue() + e.getAdjustable().getVisibleAmount() >= e.getAdjustable().getMaximum()) {
+				currentPage++;
+				loadItems(currentPage);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  listItemDTO.addListSelectionListener(this);
+		});
+
+		listItemDTO.addListSelectionListener(this);
+	}
+
+	private void loadItems(int page) {
+		// SwingWorker 사용하여 백그라운드에서 데이터 로드
+		// 데이터베이스에서 1만개 이상의 데이터를 로드
+		new SwingWorker<List<ItemListDTO>, Void>() {
+			long startTime;
+
+			@Override
+			protected void done() {
+				long endTime = System.currentTimeMillis();
+				try {
+					List<ItemListDTO> items = get();
+					for (ItemListDTO itemListDTO : items) {
+						model.addElement(itemListDTO);
+					}
+					listItemDTO.setCellRenderer(new ItemListDTORenderer());
+					System.out.println("Items loaded in: " + (endTime - startTime) + " ms");
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			protected List<ItemListDTO> doInBackground() throws Exception {
+				startTime = System.currentTimeMillis();
+				return itemRepoImpl.getItemDTO(product_id, page * PAGE_SIZE, PAGE_SIZE);
+			}
+		}.execute();
 	}
 
 	public void upDateList() {
-		// 아이템 리스트 업데이트 부분 수정완료
-		// 기존 전체 모델 지우고 다시 불러오는 방법에서
-		// 현재 표시되고 있는 마지막 아이템의 id를 기준으로 db에서 검색후
-		// 새롭게 올라온 아이템만 업데이트 하는 방식
-		// 발표에 이기능 설명 들어가야함
-
-		int lastItemNum = model.get(0).getProductId();
-		try {
-			itemListDTOs = itemRepoImpl.getItemDTO(lastItemNum);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		for (ItemListDTO itemListDTO : itemListDTOs) {
-			model.add(0, itemListDTO);
-			listItemDTO.setCellRenderer(new ItemListDTORenderer());
-		}
-
+		model.clear();
+		currentPage = 0;
+		loadItems(currentPage);
 	}
 
 	private void initData() {
@@ -86,36 +92,29 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		setSize(400, 500);
 		setLocation(0, 50);
 		setVisible(true);
-
 	}
 
 	private void setInitLayout() {
-
 		add(jsPane = new JScrollPane(listItemDTO = createListItemDTO()));
 		jsPane.setSize(400, 500);
 		jsPane.setLocation(0, 0);
 	}
 
 	private JList<ItemListDTO> createListItemDTO() {
-		// TODO 커스텀 예정
 		model = new DefaultListModel<>();
-		JList<ItemListDTO> list = new JList<ItemListDTO>(model);
-
-		return list;
+		return new JList<ItemListDTO>(model);
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		 if (!e.getValueIsAdjusting()) {  
-	            ItemListDTO selectedItem = listItemDTO.getSelectedValue();
-	            if (selectedItem != null) {
-	            	product_id = selectedItem.getProductId();
-	            	itemDetilPanel = new ItemDetilPanel(mContext.getMyUserDTO() ,product_id, itemRepoImpl,panelAdapter);
-	                // 선택된 아이템을 여기서 처리합니다.
-	                // TODO 상품 id  멤버변수에 저장 . //-> 사용할때마다 계속 생성 x , 덮어쓰는것.
-	            	panelAdapter.addItemDetailPanel(itemDetilPanel);
-	            }
-	        }
+		if (!e.getValueIsAdjusting()) {
+			ItemListDTO selectedItem = listItemDTO.getSelectedValue();
+			if (selectedItem != null) {
+				product_id = selectedItem.getProductId();
+				itemDetilPanel = new ItemDetilPanel(mContext.getMyUserDTO(), product_id, itemRepoImpl, panelAdapter);
+				panelAdapter.addItemDetailPanel(itemDetilPanel);
+			}
+		}
 	}
 
 	@Data
@@ -131,7 +130,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		public ItemListDTORenderer() {
 			setLayout(new BorderLayout(5, 5));
 
-			JPanel panelText = new JPanel(new GridLayout(0, 1));
+			panelText = new JPanel(new GridLayout(0, 1));
 			panelText.add(lbName);
 			panelText.add(lbPrice);
 
@@ -150,6 +149,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 				icon = byteArrayToImageIcon(itemListDTO.getImage());
 			} catch (IOException e) {
 				e.printStackTrace();
+				icon = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)); // 기본 아이콘
 			}
 
 			lbIcon.setIcon(icon);
@@ -158,17 +158,10 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			lbPrice.setText(itemListDTO.getPrice());
 			lbPrice.setForeground(Color.blue);
 
-			// set Opaque to change background color of JLabel
 			lbName.setOpaque(true);
 			lbPrice.setOpaque(true);
 			lbIcon.setOpaque(true);
 
-			// 선택시 배경 불투명도 true로 해둬야 선택을 확인가능
-			lbIcon.setOpaque(true);
-			lbPrice.setOpaque(true);
-			lbName.setOpaque(true);
-
-			// 선택 체크
 			if (isSelected) {
 				lbName.setBackground(list.getSelectionBackground());
 				lbPrice.setBackground(list.getSelectionBackground());
@@ -182,7 +175,6 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			}
 			return this;
 		}
-
 	}
 
 	public ImageIcon byteArrayToImageIcon(byte[] bytes) throws IOException {
@@ -192,5 +184,4 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		Image image = bImage.getScaledInstance(bImage.getWidth(), bImage.getHeight(), Image.SCALE_DEFAULT);
 		return new ImageIcon(image);
 	}
-
 }
