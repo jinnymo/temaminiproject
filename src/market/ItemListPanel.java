@@ -52,12 +52,14 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		listItemDTO.addListSelectionListener(this);
 	}
 
+	// 한번에 데이터를 불러오니 시간이 오래걸림
 	private void loadItems(int page) {
 		// SwingWorker 사용하여 백그라운드에서 데이터 로드
-		// 데이터베이스에서 1만개 이상의 데이터를 로드
+		// 데이터베이스에서 1만개 이상의 데이터를 로드 하기때문에 시간이 오래걸리는 점을 해결
 		new SwingWorker<List<ItemListDTO>, Void>() {
 			long startTime;
 
+			// 리스트에 띄우는 곳
 			@Override
 			protected void done() {
 				long endTime = System.currentTimeMillis();
@@ -73,6 +75,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 				}
 			}
 
+			// 백그라운드에서 데이터베이스를 데이터를 요청하는 곳
 			@Override
 			protected List<ItemListDTO> doInBackground() throws Exception {
 				startTime = System.currentTimeMillis();
