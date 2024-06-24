@@ -6,17 +6,21 @@ import javax.swing.JFrame;
 
 import lombok.Data;
 import lombok.Getter;
+import market.DTO.UserDTO;
+import market.panel.LoginPanel;
+import market.panel.PanelAdapter;
+import market.repoIm.ItemRepoImpl;
 
 @Getter
 public class MainFrame extends JFrame {
  
-	public Login loginPanel;
+	public LoginPanel loginPanel;
 	private PanelAdapter panelAdapter;
 	private UserDTO myUserDTO;
 	private ItemRepoImpl itemRepoImpl;
 
 	public MainFrame() {
-		loginPanel = new Login(this);
+		loginPanel = new LoginPanel(this);
 		itemRepoImpl = new ItemRepoImpl();
 		initData();
 		setInitLayout();

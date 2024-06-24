@@ -13,12 +13,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import market.repoIm.UserRepoImpl;
+
 public class Register extends JPanel implements FocusListener {
 	private JTextField userName;
 	private JTextField idField;
+	// passwordfield 쓰면 hint도 *로 표시
 	private JTextField pwdField;
 	private JButton btnSubmit;
 	private JButton btnCheckId;
+
+	private Resource resource;
+	private TextHint hint;
 
 	private MainFrame context;
 	private UserRepoImpl uImpl;
@@ -43,12 +49,9 @@ public class Register extends JPanel implements FocusListener {
 		btnSubmit = new JButton("가입하기");
 		btnCheckId = new JButton("아이디 중복 확인");
 
-	
-
 		userName.setForeground(Color.GRAY);
 		idField.setForeground(Color.GRAY);
 		pwdField.setForeground(Color.GRAY);
-
 
 	}
 
@@ -75,10 +78,10 @@ public class Register extends JPanel implements FocusListener {
 		btnSubmit.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 		btnCheckId.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 
-		userName.setLocation(100, 70);
-		idField.setLocation(100, 100);
-		btnCheckId.setLocation(100, 140);
-		pwdField.setLocation(100, 180);
+		userName.setLocation(125, 70);
+		idField.setLocation(125, 100);
+		btnCheckId.setLocation(125, 140);
+		pwdField.setLocation(125, 180);
 		btnSubmit.setLocation(125, 220);
 
 		context.add(this);
@@ -111,7 +114,8 @@ public class Register extends JPanel implements FocusListener {
 						btnCheckId.setText("사용가능");
 					} else {
 						// 아이디 중복 알림
-						JOptionPane.showMessageDialog(null, "이미 사용중인 ID 입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+//						JOptionPane.showMessageDialog(null, "이미 사용중인 ID 입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+						Resource.WarnMsgDialog("이미 사용중인 ID 입니다.");
 						idField.setText("중복 아이디 다시 입력");
 					}
 
@@ -137,7 +141,8 @@ public class Register extends JPanel implements FocusListener {
 					}
 					if (result > 0) {
 						// 회원가입 완료 알림
-						JOptionPane.showMessageDialog(null, " 회원가입이 완료되었습니다. ", "", JOptionPane.PLAIN_MESSAGE);
+//						JOptionPane.showMessageDialog(null, " 회원가입이 완료되었습니다. ", "", JOptionPane.PLAIN_MESSAGE);
+						Resource.MsgDialog(" 회원가입이 완료되었습니다. ");
 						// 정상 등록 되면 회원가입창 숨기고 로그인창 열기
 						setVisible(false);
 						context.loginPanel.setVisible(true);
@@ -146,7 +151,8 @@ public class Register extends JPanel implements FocusListener {
 
 				} else {
 					// 회원가입 > 아이디 중복체크 x 알림
-					JOptionPane.showMessageDialog(null, " 아이디 중복확인를 해주십시요. ", "경고", JOptionPane.WARNING_MESSAGE);
+//					JOptionPane.showMessageDialog(null, " 아이디 중복확인를 해주십시요. ", "경고", JOptionPane.WARNING_MESSAGE);
+					Resource.WarnMsgDialog(" 아이디 중복확인를 확인하세요. ");
 				}
 
 			}
@@ -192,17 +198,20 @@ public class Register extends JPanel implements FocusListener {
 		if (e.getSource() == idField) {
 			if (idField.getText().isEmpty()) {
 				idField.setForeground(Color.GRAY);
-				idField.setText("아이디를 입력하세요.");
+//				idField.setText("아이디를 입력하세요.");
+				hint = new TextHint(idField, "아이디를 입력하세요.");
 			}
 		} else if (e.getSource() == userName) {
 			if (userName.getText().isEmpty()) {
 				userName.setForeground(Color.GRAY);
-				userName.setText("이름을 입력하세요.");
+//				userName.setText("이름을 입력하세요.");
+				hint = new TextHint(userName, "이름을 입력하세요.");
 			}
 		} else if (e.getSource() == pwdField) {
 			if (pwdField.getText().isEmpty()) {
 				pwdField.setForeground(Color.GRAY);
-				pwdField.setText("비밀번호를 입력하세요.");
+//				pwdField.setText("비밀번호를 입력하세요.");
+				hint = new TextHint(pwdField, "비밀번호를 입력하세요.");
 			}
 		}
 	}
