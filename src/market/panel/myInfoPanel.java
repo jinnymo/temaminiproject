@@ -36,73 +36,32 @@ import market.DTO.ItemListDTO;
 import market.repoIm.ItemRepoImpl;
 import market.repoIm.UserInfoRepoIm;
 
-public class myInfoPanel extends JPanel implements ActionListener, ListSelectionListener {
+public class myInfoPanel extends JPanel implements ActionListener {
 
 	private MainFrame mContext;
-//	private PanelAdapter panelAdapter;
 	private UserInfoRepoIm userInfoRepoIm;
 	private ItemRepoImpl itemRepoImpl;
 
 	private JList<ItemListDTO> listItemDTO;
-	private DefaultListModel<ItemListDTO> model;
-	private JButton reviceBtn; // 수정 버튼
-	private JLabel reviceLbl; // "회원정보 수정" 라벨
-	private JLabel reviceNameLbl; // "이름 수정" 라벨
-	private JLabel revicePassLbl; // "비밀번호 수정" 라벨
-	private JPasswordField revicePassText; // 비밀번호 입력 필드
-	private JTextField reviceNameText; // 이름 입력 필드
+	private JButton reviceBtn;
+	private JLabel reviceLbl;
+	private JLabel reviceNameLbl;
+	private JLabel revicePassLbl;
+	private JPasswordField revicePassText;
+	private JTextField reviceNameText;
 
 	private JButton updateBtn;
 	private JButton deleteBtn;
 	private JScrollPane jScrollPane;
 
-	private int currentPage = 0;
-	private static final int PAGE_SIZE = 20;
-
-	private int product_id;
-
 	public myInfoPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
-//		this.panelAdapter = panelAdapter;
 		this.userInfoRepoIm = new UserInfoRepoIm();
 		this.itemRepoImpl = mContext.getItemRepoImpl();
 		initData();
 		setInitLayout();
-		addEventLisetener();
-		loadItems(currentPage);
+		addEventListener();
 
-		jScrollPane.getVerticalScrollBar().addAdjustmentListener(e -> {
-			if (!e.getValueIsAdjusting()
-					&& e.getValue() + e.getAdjustable().getVisibleAmount() >= e.getAdjustable().getMaximum()) {
-				currentPage++;
-				loadItems(currentPage);
-			}
-		});
-	}
-
-	private void loadItems(int page) {
-		new SwingWorker<List<ItemListDTO>, Void>() {
-
-			@Override
-			protected void done() {
-				try {
-					List<ItemListDTO> items = get();
-					System.out.println(items.size());
-					for (ItemListDTO itemListDTO : items) {
-						System.out.println("123");
-						model.addElement(itemListDTO);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			@Override
-			protected List<ItemListDTO> doInBackground() throws Exception {
-				int user_num = mContext.getMyUserDTO().getUser_num();
-				return itemRepoImpl.getUserItemDTO(user_num, page * PAGE_SIZE, PAGE_SIZE);
-			}
-		}.execute();
 	}
 
 	private void initData() {
@@ -115,19 +74,15 @@ public class myInfoPanel extends JPanel implements ActionListener, ListSelection
 		reviceNameLbl = new JLabel("이름 수정");
 		revicePassLbl = new JLabel("비밀번호 수정");
 
-		updateBtn = new JButton("상품 수정");
-		deleteBtn = new JButton("상품 삭제");
-
-		model = new DefaultListModel<>();
-		listItemDTO = new JList<>(model);
-		listItemDTO.setCellRenderer(new ItemListDTORenderer());
-
-		jScrollPane = new JScrollPane(listItemDTO);
-
 		reviceNameText = new JTextField();
 		new TextHint(reviceNameText, "이름 입력");
 		revicePassText = new JPasswordField();
 		new TextHint(revicePassText, "비밀번호 입력");
+	}
+
+	private void setInitLayout() {
+		setBackground(Color.gray);
+		setLayout(null);
 
 		reviceLbl.setSize(100, 100);
 		reviceLbl.setLocation(10, 10);
@@ -149,36 +104,16 @@ public class myInfoPanel extends JPanel implements ActionListener, ListSelection
 		revicePassText.setLocation(110, 85);
 		revicePassText.setBackground(Color.white);
 
-		jScrollPane.setSize(380, 300);
-		jScrollPane.setLocation(10, 150);
-
-		updateBtn.setSize(100, 35);
-		updateBtn.setLocation(180, 455);
-
-		deleteBtn.setSize(100, 35);
-		deleteBtn.setLocation(285, 455);
-
-	}
-
-	private void setInitLayout() {
-		setBackground(Color.gray);
-		setLayout(null); // 절대 레이아웃 사용
 		add(reviceLbl);
 		add(reviceBtn);
 		add(reviceNameLbl);
 		add(reviceNameText);
 		add(revicePassLbl);
 		add(revicePassText);
-		add(jScrollPane);
-		add(updateBtn);
-		add(deleteBtn);
 	}
 
-	private void addEventLisetener() {
+	private void addEventListener() {
 		reviceBtn.addActionListener(this);
-		updateBtn.addActionListener(this);
-		deleteBtn.addActionListener(this);
-		listItemDTO.addListSelectionListener(this);
 	}
 
 	@Override
@@ -186,111 +121,17 @@ public class myInfoPanel extends JPanel implements ActionListener, ListSelection
 		JButton source = (JButton) e.getSource();
 		if (source == reviceBtn) {
 			String name = reviceNameText.getText();
-			String Password = new String(revicePassText.getPassword());
-			System.out.println(Password);
+			String password = new String(revicePassText.getPassword());
 			String userId = mContext.getMyUserDTO().getUser_id();
 			try {
-				userInfoRepoIm.updateUserInfo(name, Password, userId);
+				userInfoRepoIm.updateUserInfo(name, password, userId);
 				Resource.MsgDialog("사용자 정보 변경 !!");
 				reviceNameText.setText("");
 				revicePassText.setText("");
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		} else if (source == updateBtn) {
-			// addItemPanel 띄우고 저장된 product_name, price, categoryId, content, 이미지 띄우기
-			upDateList();
-		} else if (source == deleteBtn) {
-			try {
-				System.out.println(product_id);
-				userInfoRepoIm.deleteItem(product_id);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			upDateList();
 		}
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if (!e.getValueIsAdjusting()) {
-			ItemListDTO selectItem = listItemDTO.getSelectedValue();
-			if (selectItem != null) {
-				product_id = selectItem.getProductId();
-			}
-		}
-	}
-
-	private class ItemListDTORenderer extends JPanel implements ListCellRenderer<ItemListDTO> {
-
-		private JLabel lbIcon = new JLabel();
-		private JLabel lbName = new JLabel();
-		private JLabel lbPrice = new JLabel();
-		private JPanel panelText;
-		private JPanel panelIcon;
-		private ImageIcon icon = null;
-
-		public ItemListDTORenderer() {
-			setLayout(new BorderLayout(5, 5));
-
-			panelText = new JPanel(new GridLayout(0, 1));
-			panelText.add(lbName);
-			panelText.add(lbPrice);
-
-			panelIcon = new JPanel();
-			panelIcon.setBorder(new EmptyBorder(0, 0, 0, 0));
-			panelIcon.add(lbIcon);
-
-			add(panelIcon, BorderLayout.WEST);
-			add(panelText, BorderLayout.CENTER);
-		}
-
-		@Override
-		public Component getListCellRendererComponent(JList<? extends ItemListDTO> list, ItemListDTO itemListDTO,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			try {
-				icon = byteArrayToImageIcon(itemListDTO.getImage());
-			} catch (IOException e) {
-				e.printStackTrace();
-				icon = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)); // 기본 아이콘
-			}
-
-			lbIcon.setIcon(icon);
-			lbName.setText(itemListDTO.getProductName());
-
-			lbPrice.setText(itemListDTO.getPrice());
-			lbPrice.setForeground(Color.blue);
-
-			lbName.setOpaque(true);
-			lbPrice.setOpaque(true);
-			lbIcon.setOpaque(true);
-
-			if (isSelected) {
-				lbName.setBackground(list.getSelectionBackground());
-				lbPrice.setBackground(list.getSelectionBackground());
-				lbIcon.setBackground(list.getSelectionBackground());
-				setBackground(list.getSelectionBackground());
-			} else {
-				lbName.setBackground(list.getBackground());
-				lbPrice.setBackground(list.getBackground());
-				lbIcon.setBackground(list.getBackground());
-				setBackground(list.getBackground());
-			}
-			return this;
-		}
-
-		public ImageIcon byteArrayToImageIcon(byte[] bytes) throws IOException {
-			ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-			BufferedImage bImage = ImageIO.read(bis);
-			bis.close();
-			Image image = bImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 적절한 크기로 조정
-			return new ImageIcon(image);
-		}
-	}
-
-	public void upDateList() {
-		model.clear();
-		currentPage = 0;
-		loadItems(currentPage);
-	}
 }
