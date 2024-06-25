@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import lombok.Data;
 import lombok.Getter;
 import market.DTO.UserDTO;
 import market.panel.LoginPanel;
