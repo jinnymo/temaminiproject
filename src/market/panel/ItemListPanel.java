@@ -1,5 +1,6 @@
 package market.panel;
 
+import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -35,6 +36,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private PanelAdapter panelAdapter;
 
 	private JList<ItemListDTO> listItemDTO;
+	// 모델을 쓰는 이유 : 데이터를 추가 및 삭제하기 위함
 	private DefaultListModel<ItemListDTO> model;
 	private ItemRepoImpl itemRepoImpl;
 	private List<ItemListDTO> itemListDTOs;
@@ -44,7 +46,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	ItemDetilPanel itemDetilPanel;
 
 	private int currentPage = 0;
-	private static final int PAGE_SIZE = 20;
+	private static final int PAGE_SIZE = 150;
 
 	public ItemListPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
@@ -56,12 +58,19 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 
 		// 스크롤의 위치가
 		jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
-			if (!e.getValueIsAdjusting()
-					&& e.getValue() + e.getAdjustable().getVisibleAmount() >= e.getAdjustable().getMaximum()) {
-				currentPage++;
-				loadItems(currentPage);
+			if (!e.getValueIsAdjusting()) {
+				Adjustable adjustable = e.getAdjustable();
+				int totalScrollableArea = adjustable.getMaximum() - adjustable.getMinimum()
+						- adjustable.getVisibleAmount();
+				int currentPosition = adjustable.getValue() - adjustable.getMinimum();
+
+				if (currentPosition >= totalScrollableArea * 0.95) {
+					currentPage++;
+					loadItems(currentPage);
+				}
 			}
 		});
+
 		// 스크롤이 제일 아래일때
 
 		listItemDTO.addListSelectionListener(this);
@@ -69,8 +78,8 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 
 	// 한번에 데이터를 불러오니 시간이 오래걸림
 	// 해결법 - 지연로딩-Lazy Loading(데이터베이스에서 한번에 데이터를 불러와 일부만 보여준후 스크롤을 내리면 추가로 보여주는 방식)
+	// 데이터베이스에서 1만개 이상의 데이터를 한번에 받아오기 때문에 GUI가 프리징이 걸림
 	private void loadItems(int page) {
-		// 데이터베이스에서 1만개 이상의 데이터를 한번에 받아오기 때문에 시간이 오래걸림
 		// 해결법 - SwingWorker 사용하여 백그라운드에서 데이터 로드
 		// SwingWorker 자체적으로 스레드를 생성하여 백그라운드에서 데이터를 로딩
 		new SwingWorker<List<ItemListDTO>, Void>() {
