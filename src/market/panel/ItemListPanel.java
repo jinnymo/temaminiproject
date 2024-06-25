@@ -44,39 +44,53 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private JScrollPane jsPane;
 	private int product_id;
 	ItemDetilPanel itemDetilPanel;
+	
+	private boolean loadingStatus;
 
 	private int currentPage = 0;
-<<<<<<< HEAD
-	private static final int PAGE_SIZE = 15;
-=======
-	private static final int PAGE_SIZE = 50;
->>>>>>> d5ea10acfa34a3357d03c088b62fd795db49c5b3
+
+	private static final int PAGE_SIZE = 70;
+
 
 	public ItemListPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
 		this.panelAdapter = panelAdapter;
 		this.itemRepoImpl = mContext.getItemRepoImpl();
+		
 		initData();
 		setInitLayout();
 		loadItems(currentPage);
 
-		// 스크롤의 위치가
-		new Thread(() -> jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
-			if (!e.getValueIsAdjusting()) {
-				Adjustable adjustable = e.getAdjustable();
-				int totalScrollableArea = adjustable.getMaximum() - adjustable.getMinimum()
-						- adjustable.getVisibleAmount();
-				int currentPosition = adjustable.getValue() - adjustable.getMinimum();
-
-				if (currentPosition >= totalScrollableArea * 1) {
-					currentPage++;
-					loadItems(currentPage);
-					
-				}
-			}
-		})).start();
-
 		listItemDTO.addListSelectionListener(this);
+
+		// 스크롤의 위치가
+		
+		Thread scroll = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				jsPane.getVerticalScrollBar().addAdjustmentListener(e ->{
+					if (!e.getValueIsAdjusting()) {
+						Adjustable adjustable = e.getAdjustable();
+						int totalScrollableArea = adjustable.getMaximum() - adjustable.getMinimum()
+								- adjustable.getVisibleAmount();
+						int currentPosition = adjustable.getValue() - adjustable.getMinimum();
+
+						if (currentPosition >= totalScrollableArea * 0.7 && model.getSize() > 0 && loadingStatus) {
+							System.out.println("데이터를 불러옵니다.");
+							currentPage++;
+							loadItems(currentPage);
+							
+						}
+					}
+					
+				});
+			}
+		});
+		scroll.start();
+
+
 	}
 
 	// 한번에 데이터를 불러오니 시간이 오래걸림
@@ -85,6 +99,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private void loadItems(int page) {
 		// 해결법 - SwingWorker 사용하여 백그라운드에서 데이터 로드
 		// SwingWorker 자체적으로 스레드를 생성하여 백그라운드에서 데이터를 로딩
+		loadingStatus = false;
 		new SwingWorker<List<ItemListDTO>, Void>() {
 			long startTime;
 
@@ -105,13 +120,20 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				loadingStatus = true;
 			}
 
 			// 백그라운드에서 데이터베이스를 데이터를 요청하는 곳
 			@Override
 			protected List<ItemListDTO> doInBackground() throws Exception {
 				startTime = System.currentTimeMillis();
-				return itemRepoImpl.getItemDTO(PAGE_SIZE, page * PAGE_SIZE);
+				if (model.getSize() > 0) {
+					return itemRepoImpl.getItemDTO(PAGE_SIZE, page * PAGE_SIZE);
+					
+				}else {
+					return itemRepoImpl.getItemDTO(PAGE_SIZE, page * PAGE_SIZE);
+					
+				}
 			}
 		}.execute();
 	}

@@ -72,9 +72,9 @@ public class ItemRepoImpl implements ItemRepo {
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
 
-		String query = "SELECT i.user_num, i.product_id, i.product_name, i.price, s.image " + "FROM item AS i "
-				+ "JOIN scaled_item_image AS s ON i.product_id = s.product_id " + "WHERE s.image_num = 1 "
-				+ "ORDER BY i.date DESC " + "LIMIT ? OFFSET ?";
+		String query = " SELECT i.user_num, i.product_id, i.product_name, i.price, MAX(s.image) AS image "
+                + "FROM item AS i JOIN scaled_item_image AS s ON i.product_id = s.product_id "
+                + "WHERE s.image_num = 1 GROUP BY s.product_id ORDER BY i.product_id DESC LIMIT ? OFFSET ? ";
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
