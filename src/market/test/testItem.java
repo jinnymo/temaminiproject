@@ -21,6 +21,9 @@ import market.panel.DBConnectionManager;
 public class testItem extends JPanel {
 	Image[] bigArr = new Image[3];
 	Image[] smallArr = new Image[3];
+	static int a = 0;
+	static int b = 1;
+	static int c = 2;
 	private int repeatCount; // 반복 횟수 저장 변수 추가
 
 	// DBConnectionManager 및 userIdQuery는 아래 예시로 추가된 부분입니다.
@@ -28,7 +31,7 @@ public class testItem extends JPanel {
 
 	public static void main(String[] args) {
 		// 생성자에 반복 횟수를 전달
-		new testItem(200);
+		new testItem(3);
 		System.out.println("생성 끝");
 	}
 
@@ -43,41 +46,47 @@ public class testItem extends JPanel {
 	}
 
 	public void testInsetitem() throws SQLException {
-		int product_id = 0;
-		if (!getScaledIcon("img/image1.png", 0) || !getScaledIcon("img/image2.png", 1)
-				|| !getScaledIcon("img/image3.png", 2)) {
-			System.err.println("이미지 로딩 실패");
-			return;
-		}
+		for (int j = 0; j < repeatCount; j++) { // 반복 횟수 조절
+			int product_id = 0;
+			System.out.println(repeatCount);
 
-		List<byte[]> big = new ArrayList<>();
-		List<byte[]> small = new ArrayList<>();
-		List<Integer> usernum = new ArrayList<>();
+			List<Integer> usernum = new ArrayList<>();
 
-		try (Connection conn = DBConnectionManager.getInstance().getConnection();
-				PreparedStatement userNumPstmt = conn.prepareStatement(userIdQuery);
-				ResultSet rs = userNumPstmt.executeQuery()) {
+			try (Connection conn = DBConnectionManager.getInstance().getConnection();
+					PreparedStatement userNumPstmt = conn.prepareStatement(userIdQuery);
+					ResultSet rs = userNumPstmt.executeQuery()) {
 
-			while (rs.next()) {
-				usernum.add(rs.getInt("user_num"));
+				while (rs.next()) {
+					usernum.add(rs.getInt("user_num"));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-		for (int i = 0; i < 3; i++) {
-			byte[] bigImageBytes = toByte(bigArr[i]);
-			byte[] smallImageBytes = toByte(smallArr[i]);
-			if (bigImageBytes == null || smallImageBytes == null) {
-				System.err.println("이미지를 바이트 배열로 변환하는데 실패했습니다.");
-				return;
-			}
-			big.add(bigImageBytes);
-			small.add(smallImageBytes);
-		}
+			for (Integer userNum : usernum) {
 
-		for (Integer userNum : usernum) {
-			for (int j = 0; j < repeatCount; j++) { // 반복 횟수 조절
+				List<byte[]> big = new ArrayList<>();
+				List<byte[]> small = new ArrayList<>();
+				getScaledIcon("img/test_img1.png", a);
+				getScaledIcon("img/test_img2.png", b);
+				getScaledIcon("img/test_img3.png", c);
+				
+				int temp = 0;
+				temp = a;
+				a = b;
+				b = c;
+				c = temp;
+			
+				for (int i = 0; i < 3; i++) {
+					byte[] bigImageBytes = toByte(bigArr[i]);
+					byte[] smallImageBytes = toByte(smallArr[i]);
+					if (bigImageBytes == null || smallImageBytes == null) {
+						System.err.println("이미지를 바이트 배열로 변환하는데 실패했습니다.");
+						return;
+					}
+					big.add(bigImageBytes);
+					small.add(smallImageBytes);
+				}
 				String query = "INSERT INTO item (product_name, price, state, date, product_info, user_num, category_id) VALUES(?, ?, ?, now(), ?, ?, ?)";
 				String productidQuery = "SELECT product_id FROM item WHERE user_num = ? ORDER BY date DESC LIMIT 1";
 				String bImagequery = "INSERT INTO original_item_image (product_id, image, image_num) VALUES(?, ?, ?)";
@@ -117,6 +126,7 @@ public class testItem extends JPanel {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+
 			}
 		}
 	}
