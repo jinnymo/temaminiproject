@@ -129,18 +129,15 @@ public class LoginPanel extends JPanel implements FocusListener {
 
 				try {
 					if (uImpl.checkuserID(id)) {
-						// TODO 여기는 아이디 입력 오류일떄 실행문
-						// 입력한 아이디가 db에 존재 하지 않을떄!!
-						// 여기도 알람 메세지 출력 해야 겠죠>?
+						//아이디 입력 오류일떄 실행문
 						Resource.MsgDialog("아이디 입력 오류 !!");
 						System.out.println("아이디 입력 오류");
 
 					} else {
-						// 여기는 입력한 아이디가 db에 존재 할때 실행되는 부분!!!
-						// !!!!!주석만 보지 말고 꼭 코드 뜯어보세요!!!!!!!!
+						//입력한 아이디가 db에 존재 할때 실행되는 부분!!!
 						if ((myUserDTO = uImpl.checkUserPwd(id, pwd)) != null) {
 							// UserDTO myUserDTO = uImpl.checkUserPwd(id, pwd) != null
-							// 여기는 비밀번호가 맞을떄 실행되는 부분
+							//비밀번호가 맞을떄 실행되는 부분
 							Resource.MsgDialog("로그인 성공 !!");
 							System.out.println("로그인 성공!!");
 
@@ -148,9 +145,10 @@ public class LoginPanel extends JPanel implements FocusListener {
 							setVisible(false);
 
 						} else {
+							//비밀번호 틀렸을떄 실행되는 부분!!!
 							// 여기는 비밀번호 틀렸을떄 실행되는 부분!!!
 							// 여기도 당연히 알람 메세지 출력 꼭 해야 겠죠???
-							Resource.MsgDialog("로그인 실패 !!");
+							Resource.MsgDialog("비밀번호 입력 오류 !!");
 							System.out.println("로그인 실패 !!");
 						}
 					}

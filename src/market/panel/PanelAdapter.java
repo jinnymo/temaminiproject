@@ -45,9 +45,12 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		setVisible(true);
 
 		itemListPanel = new ItemListPanel(mContext, this);
-		chatListPanel = new ChatListPanel();
+		chatListPanel = new ChatListPanel(mContext,this);
 		addItemPanel = new addItemPanel(mContext);
 		myInfoPanel = new myInfoPanel(mContext, this);
+		
+		Thread chatlistThread = new Thread(chatListPanel);
+		chatlistThread.start();
 
 		topPanel = new JPanel();
 		searchTF = new JTextField("검색");

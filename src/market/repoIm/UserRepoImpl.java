@@ -49,16 +49,12 @@ public class UserRepoImpl implements UserRepo {
 			rs = pstmt.executeQuery();
 			System.out.println();
 			if (rs.next()) {
-				// 사용불가
 				return false;
 			} else {
-				// 사용가능
 				return true;
 			}
-
 		}
-
-	} 
+	}
 
 	@Override
 	public UserDTO checkUserPwd(String userId, String userpwd) throws SQLException {
