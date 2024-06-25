@@ -95,18 +95,12 @@ public class Register extends JPanel implements FocusListener {
 		btnCheckId.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// todo
 				// 아이디 중복확인 쿼리 시작
 				// 쿼리 내용 -> user에 접근해서 select*from where 해서
 				// 콜백이 있으면 중복 없으면 가능
 				idCheck = false;
 				try {
 					if (uImpl.checkuserID(idField.getText())) {
-						// 여기에 저장하는 이유는 회원가입 버튼누를떄 중복확인하고
-						// 또 아이디 부분이 변경 되었을 경우를 가정해서 추후 확인하기 위해
-						// 임시 위치에 저장
-						// idReCheck = idField.getText();
-						// 위에 우려 사항을 그냥 수정 못하게 막
 						idField.setEditable(false);
 						idCheck = true;
 						idField.setBackground(Color.gray);
