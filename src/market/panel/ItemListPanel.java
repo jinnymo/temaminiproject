@@ -46,7 +46,11 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	ItemDetilPanel itemDetilPanel;
 
 	private int currentPage = 0;
+<<<<<<< HEAD
 	private static final int PAGE_SIZE = 15;
+=======
+	private static final int PAGE_SIZE = 50;
+>>>>>>> d5ea10acfa34a3357d03c088b62fd795db49c5b3
 
 	public ItemListPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
