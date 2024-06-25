@@ -103,7 +103,7 @@ public class LoginPanel extends JPanel implements FocusListener {
 		logoLabel.setLocation(150,60);
 		
 		idField.setLocation(130, 240);
-		pwdField.setLocation(130, 280);
+		pwdField.setLocation(130, 280); 
 		btnLogin.setLocation(155, 320);
 		btnJoin.setLocation(155, 360);
 		
