@@ -195,7 +195,6 @@ public class PanelAdapter extends JPanel implements ActionListener {
 			myInfoPanel.setVisible(true);
 		} else if (e.getSource() == updateBtn) {
 			itemListPanel.upDateList();
-			myInfoPanel.upDateList();
 		}
 		revalidate();
 		repaint();
