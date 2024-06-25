@@ -46,7 +46,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	ItemDetilPanel itemDetilPanel;
 
 	private int currentPage = 0;
-	private static final int PAGE_SIZE = 150;
+	private static final int PAGE_SIZE = 15;
 
 	public ItemListPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
@@ -57,21 +57,20 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		loadItems(currentPage);
 
 		// 스크롤의 위치가
-		jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
+		new Thread(() -> jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
 			if (!e.getValueIsAdjusting()) {
 				Adjustable adjustable = e.getAdjustable();
 				int totalScrollableArea = adjustable.getMaximum() - adjustable.getMinimum()
 						- adjustable.getVisibleAmount();
 				int currentPosition = adjustable.getValue() - adjustable.getMinimum();
 
-				if (currentPosition >= totalScrollableArea * 0.95) {
+				if (currentPosition >= totalScrollableArea * 1) {
 					currentPage++;
 					loadItems(currentPage);
+					
 				}
 			}
-		});
-
-		// 스크롤이 제일 아래일때
+		})).start();
 
 		listItemDTO.addListSelectionListener(this);
 	}
@@ -90,11 +89,13 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			protected void done() {
 				long endTime = System.currentTimeMillis();
 				try {
-					// 백그라운드에서 요청받은 데이터를 get() 으로 입력
+					// doInBackground 값을 get() 으로 items에 입력
 					List<ItemListDTO> items = get();
 					for (ItemListDTO itemListDTO : items) {
+						// model 에 itemListDTO add
 						model.addElement(itemListDTO);
 					}
+					// ItemListDTORenderer 생성하여
 					listItemDTO.setCellRenderer(new ItemListDTORenderer());
 					System.out.println("Items loaded in: " + (endTime - startTime) + " ms");
 				} catch (Exception e) {
