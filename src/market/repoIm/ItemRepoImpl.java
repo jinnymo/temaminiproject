@@ -72,9 +72,15 @@ public class ItemRepoImpl implements ItemRepo {
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
 
-		String query = "SELECT i.user_num, i.product_id, i.product_name, i.price, s.image " + "FROM item AS i "
-				+ "JOIN scaled_item_image AS s ON i.product_id = s.product_id " + "WHERE s.image_num = 1 "
-				+ "ORDER BY i.date DESC " + "LIMIT ? OFFSET ?";
+		String query = " SELECT i.user_num, i.product_id, i.product_name, i.price, s.image "
+				+ " FROM item AS i "
+				+ " JOIN ( "
+				+ "    SELECT product_id, image "
+				+ "    FROM scaled_item_image "
+				+ "    WHERE image_num = 1 "
+				+ "    ORDER BY product_id DESC "
+				+ "    LIMIT ? OFFSET ? "
+				+ " ) AS s ON i.product_id = s.product_id; ";
 
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -163,9 +169,9 @@ public class ItemRepoImpl implements ItemRepo {
 		String price = null;
 		byte[] image = null;
 		List<ItemListDTO> itemListDTOs = new ArrayList<>();
-		String query = " SELECT i.user_num, i.product_id, i.product_name, i.price, s.image "
-				+ " FROM item AS i JOIN scaled_item_image AS s ON i.product_id = s.product_id JOIN user as u ON i.user_num = u.user_num "
-				+ " WHERE s.image_num = 1 AND i.user_num = ? ORDER BY i.date DESC LIMIT ? OFFSET ? ";
+		String query = " SELECT i.user_num, i.product_id, i.product_name, i.price, MAX(s.image) AS image "
+				+ "FROM item AS i JOIN scaled_item_image AS s ON i.product_id = s.product_id JOIN user AS u ON i.user_num = u.user_num "
+				+ "WHERE s.image_num = 1 GROUP BY s.product_id ORDER BY i.date DESC LIMIT ? OFFSET ? ";
 		try (Connection conn = DBConnectionManager.getInstance().getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setInt(1, user_num);

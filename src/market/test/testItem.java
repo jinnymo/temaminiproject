@@ -28,7 +28,7 @@ public class testItem extends JPanel {
 
 	public static void main(String[] args) {
 		// 생성자에 반복 횟수를 전달
-		new testItem(100);
+		new testItem(200);
 		System.out.println("생성 끝");
 	}
 

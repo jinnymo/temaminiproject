@@ -157,7 +157,6 @@ public class Register extends JPanel implements FocusListener {
 	private boolean checkTextField() {
 
 		if (userName.getText().equals("") || userName.getText().equals("이름을 입력하세요.")) {
-			System.out.println("test1");
 			return false;
 		} else if (pwdField.getText().equals("") || pwdField.getText().equals("패스워드를 입력하세요")) {
 			System.out.println("test2");

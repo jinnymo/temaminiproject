@@ -53,10 +53,8 @@ public class UserRepoImpl implements UserRepo {
 			} else {
 				return true;
 			}
-
 		}
-
-	} 
+	}
 
 	@Override
 	public UserDTO checkUserPwd(String userId, String userpwd) throws SQLException {

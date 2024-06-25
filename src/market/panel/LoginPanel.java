@@ -122,7 +122,9 @@ public class LoginPanel extends JPanel implements FocusListener {
 
 						} else {
 							//비밀번호 틀렸을떄 실행되는 부분!!!
-							Resource.MsgDialog("로그인 실패 !!");
+							// 여기는 비밀번호 틀렸을떄 실행되는 부분!!!
+							// 여기도 당연히 알람 메세지 출력 꼭 해야 겠죠???
+							Resource.MsgDialog("비밀번호 입력 오류 !!");
 							System.out.println("로그인 실패 !!");
 						}
 					}

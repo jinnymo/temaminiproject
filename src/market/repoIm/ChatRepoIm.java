@@ -8,24 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import market.DTO.ChatDTO;
+import market.DTO.ChatListDTO;
 import market.panel.DBConnectionManager;
 import market.repo.ChatRepo;
 
 public class ChatRepoIm implements ChatRepo {
 
 	@Override
-	public List<ChatDTO> ChatingList() throws SQLException {
-		List<ChatDTO> list = new ArrayList<>();
-//		String query = " SELECT * FROM chatLIST ";
-//		try (Connection conn = DBConnectionManager.getInstance().getConnection();
-//				PreparedStatement pstmt = conn.prepareStatement(query)) {
-//			ResultSet rs = pstmt.executeQuery();
-//			while (rs.next()) {
-//				ChatDTO dto = new ChatDTO().builder().id(rs.getString("chatroom_id")).user_id(rs.getInt("user_num"))
-//						.build();
-//				list.add(dto);
-//			}
-//		}
+	public List<ChatListDTO> ChatingList(int myUserId) throws SQLException {
+		List<ChatListDTO> list = new ArrayList<>();
+		String query = " select * from chatroomuser as user "
+				+ " join chatroomidlist as list "
+				+ " on user.chatroomid = list.id "
+				+ " where user_num = ? ";
+		try (Connection conn = DBConnectionManager.getInstance().getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setInt(1,myUserId);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(new ChatListDTO(rs.getString("chatroom_id"),rs.getInt("chatroomid")));
+		
+			}
+		}
 		return list;
 	}
 
