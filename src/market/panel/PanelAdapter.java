@@ -199,8 +199,6 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		} else if (e.getSource() == updateBtn) {
 			itemListPanel.upDateList();
 		}
-		revalidate();
-		repaint();
 
 	}
 

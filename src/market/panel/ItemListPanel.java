@@ -210,7 +210,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			}
 
 			lbIcon.setIcon(icon);
-			lbName.setText(itemListDTO.getProductName());
+			lbName.setText("유저번호 : "+itemListDTO.getUserNum() +" || "+itemListDTO.getProductName());
 
 			lbPrice.setText(itemListDTO.getPrice());
 			lbPrice.setForeground(Color.blue);

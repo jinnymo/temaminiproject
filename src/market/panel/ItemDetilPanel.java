@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import lombok.Data;
+import market.Resource;
 import market.DTO.ItemDetailDTO;
 import market.DTO.UserDTO;
 import market.repoIm.ChatRepoIm;
@@ -214,7 +215,7 @@ public class ItemDetilPanel extends JPanel {
 				} else if (myNum > sellerNum) {
 					chatroomName = sellerNum + "and" + myNum;
 				} else {
-					System.out.println("자신과 채팅 불가입니다.!!!");
+					Resource.WarnMsgDialog("자신과 채팅 불가");
 					return;
 				}
 				// null값이 나올수도 있음 생각후 작성
