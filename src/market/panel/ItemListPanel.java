@@ -61,6 +61,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 				loadItems(currentPage);
 			}
 		});
+		// 스크롤이 제일 아래일때 
 
 		listItemDTO.addListSelectionListener(this);
 	}
