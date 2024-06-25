@@ -54,6 +54,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 		setInitLayout();
 		loadItems(currentPage);
 
+		// 스크롤의 위치가
 		jsPane.getVerticalScrollBar().addAdjustmentListener(e -> {
 			if (!e.getValueIsAdjusting()
 					&& e.getValue() + e.getAdjustable().getVisibleAmount() >= e.getAdjustable().getMaximum()) {
@@ -61,6 +62,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 				loadItems(currentPage);
 			}
 		});
+		// 스크롤이 제일 아래일때
 
 		listItemDTO.addListSelectionListener(this);
 	}
@@ -70,6 +72,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 	private void loadItems(int page) {
 		// 데이터베이스에서 1만개 이상의 데이터를 한번에 받아오기 때문에 시간이 오래걸림
 		// 해결법 - SwingWorker 사용하여 백그라운드에서 데이터 로드
+		// SwingWorker 자체적으로 스레드를 생성하여 백그라운드에서 데이터를 로딩
 		new SwingWorker<List<ItemListDTO>, Void>() {
 			long startTime;
 
@@ -78,6 +81,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			protected void done() {
 				long endTime = System.currentTimeMillis();
 				try {
+					// 백그라운드에서 요청받은 데이터를 get() 으로 입력
 					List<ItemListDTO> items = get();
 					for (ItemListDTO itemListDTO : items) {
 						model.addElement(itemListDTO);
@@ -93,7 +97,7 @@ class ItemListPanel extends JPanel implements ListSelectionListener {
 			@Override
 			protected List<ItemListDTO> doInBackground() throws Exception {
 				startTime = System.currentTimeMillis();
-				return itemRepoImpl.getItemDTO(page * PAGE_SIZE, PAGE_SIZE);
+				return itemRepoImpl.getItemDTO(PAGE_SIZE, page * PAGE_SIZE);
 			}
 		}.execute();
 	}
