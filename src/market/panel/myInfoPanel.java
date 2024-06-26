@@ -38,7 +38,7 @@ public class myInfoPanel extends JPanel implements ActionListener {
 	private JButton updateBtn;
 	private JButton deleteBtn;
 	private JScrollPane jScrollPane;
-	
+
 	private ImageIcon reviceicon;
 
 	public myInfoPanel(MainFrame mContext, PanelAdapter panelAdapter) {
@@ -65,8 +65,8 @@ public class myInfoPanel extends JPanel implements ActionListener {
 		reviceNameText = new JTextField();
 		new TextHint(reviceNameText, mContext.getMyUserDTO().getName());
 		revicePassText = new JPasswordField();
-		new TextHint(revicePassText,mContext.getMyUserDTO().getPassword());
-		
+		new TextHint(revicePassText, mContext.getMyUserDTO().getPassword());
+
 		reviceBtn.setBorderPainted(false); // 외각 투명하게
 		reviceBtn.setContentAreaFilled(false); // 내용영역 채우기 없애기
 		reviceBtn.setFocusPainted(false); // 선택 되었을 때 얇은 점선 테두리 없애기

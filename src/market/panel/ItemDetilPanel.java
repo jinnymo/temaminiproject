@@ -218,18 +218,12 @@ public class ItemDetilPanel extends JPanel {
 					Resource.WarnMsgDialog("자신과 채팅 불가");
 					return;
 				}
-				// null값이 나올수도 있음 생각후 작성
+				
 				System.out.println(chatroomName);
 				try {
 					int roomId = 0;
 					if ((roomId = new ChatRepoIm().checkChatRoom(chatroomName)) != 0) {
-						// 기존에 대화하던 방이 있는 경우
-		 				// roomid 를 사용해서 기존 대화 불러오기
- 
 					} else {
-						// 기존에 대화 하던 방이 없는경우
-						// 채팅방 만들기
-					
 						roomId = new ChatRepoIm().newChatRoom(chatroomName, myNum, sellerNum);
 					}  
 					setVisible(false);
