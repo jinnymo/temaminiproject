@@ -75,7 +75,7 @@ public class myInfoPanel extends JPanel implements ActionListener {
 		revicePassLbl = new JLabel("비밀번호 수정");
 
 		reviceNameText = new JTextField();
-		new TextHint(reviceNameText, "이름 입력");
+		new TextHint(reviceNameText, mContext.getMyUserDTO().getName());
 		revicePassText = new JPasswordField();
 		new TextHint(revicePassText, "비밀번호 입력");
 	}
@@ -126,8 +126,8 @@ public class myInfoPanel extends JPanel implements ActionListener {
 			try {
 				userInfoRepoIm.updateUserInfo(name, password, userId);
 				Resource.MsgDialog("사용자 정보 변경 !!");
-				reviceNameText.setText("");
-				revicePassText.setText("");
+				mContext.getMyUserDTO().setName(name);
+				mContext.getMyUserDTO().setPassword(password);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}

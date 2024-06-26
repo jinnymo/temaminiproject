@@ -4,13 +4,14 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
+import lombok.Data;
 import lombok.Getter;
 import market.DTO.UserDTO;
 import market.panel.LoginPanel;
 import market.panel.PanelAdapter;
 import market.repoIm.ItemRepoImpl;
 
-@Getter
+@Data
 public class MainFrame extends JFrame {
  
 	public LoginPanel loginPanel;
@@ -25,7 +26,7 @@ public class MainFrame extends JFrame {
 		setInitLayout();
 	}
 
-	private void initData() {
+	private void	 initData() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(Resource.FRAMESIZE_X, Resource.FRAMESIZE_Y);
 		setBackground(Color.black);
