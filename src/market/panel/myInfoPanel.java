@@ -115,11 +115,21 @@ public class myInfoPanel extends JPanel implements ActionListener {
 			String name = reviceNameText.getText();
 			String password = new String(revicePassText.getPassword());
 			String userId = mContext.getMyUserDTO().getUser_id();
+			String originName = mContext.getMyUserDTO().getName();
+			String originPw = mContext.getMyUserDTO().getPassword();
 			try {
-				userInfoRepoIm.updateUserInfo(name, password, userId);
-				Resource.MsgDialog("사용자 정보 변경 !!");
-				mContext.getMyUserDTO().setName(name);
-				mContext.getMyUserDTO().setPassword(password);
+				if (!originName.equals(name)) {
+					if (!originPw.equals(password)) {
+						userInfoRepoIm.updateUserInfo(name, password, userId);
+						Resource.MsgDialog("사용자 정보 변경 !!");
+						mContext.getMyUserDTO().setName(name);
+						mContext.getMyUserDTO().setPassword(password);
+					} else if (originPw.equals(password)) {
+						Resource.WarnMsgDialog("입력하신 비밀번호는 기존과 다른것을 입력하세요.");
+					}
+				} else {
+					Resource.WarnMsgDialog("변경하실 이름이 같습니다 !!");
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
