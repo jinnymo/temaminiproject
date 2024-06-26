@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,8 +15,8 @@ import market.Resource;
 public class PanelAdapter extends JPanel implements ActionListener {
 
 	private JPanel topPanel;
-	private JTextField searchTF;
-	private JButton searchBtn;
+	private ImageIcon searchicon;
+	
 	private JButton itemListBtn;
 	private JButton chatListBtn;
 	private JButton addItemBtn;
@@ -43,6 +44,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		setLayout(null);
 		setBackground(Color.blue);
 		setVisible(true);
+		searchicon = new ImageIcon("img/btn새로고침.png");
 
 		itemListPanel = new ItemListPanel(mContext, this);
 		chatListPanel = new ChatListPanel(mContext,this);
@@ -53,19 +55,19 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		chatlistThread.start();
 
 		topPanel = new JPanel();
-		searchTF = new JTextField("검색");
+	
 		// 나중에 JButton 사용하지 않고 이미지 아이콘으로 변경
-		searchBtn = new JButton("검색버튼");
+	
 		itemListBtn = new JButton("상품버튼");
 		chatListBtn = new JButton("채팅버튼");
 		addItemBtn = new JButton("상품등록버튼");
 		myInfoBtn = new JButton("내정보버튼");
-		updateBtn = new JButton("새로고침버튼");
+		updateBtn = new JButton(searchicon);
 
 		topPanel.setSize(Resource.PANEL_FULL_SIZE_X, 50);
-		searchTF.setSize(200, 30);
-		searchBtn.setSize(30, 30);
-		updateBtn.setSize(30, 30);
+		
+	
+		updateBtn.setSize(45, 45);
 		itemListBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
 		chatListBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
 		addItemBtn.setSize(Resource.ADP_BOTTOM_BTN_X, Resource.ADP_BOTTOM_BTN_Y);
@@ -77,19 +79,20 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		addItemBtn.setLocation(200, 550);
 		myInfoBtn.setLocation(300, 550);
 
-		searchTF.setLocation(20, 10);
-		searchBtn.setLocation(300, 10);
-		updateBtn.setLocation(450, 10);
-
-		topPanel.setBackground(Color.orange);
+		
+		//TODO 위치 왜 안옮겨져요?! 오른쪽 모서리에 중앙 맞춰서 배치
+		updateBtn.setLocation(350, 0);
+		
+		Color customColor = new Color(0x7000D8);
+		topPanel.setBackground(customColor);
 
 	}
 
 	private void setInitLayout() {
 
 		add(topPanel);
-		topPanel.add(searchTF);
-		topPanel.add(searchBtn);
+	
+		
 		topPanel.add(updateBtn);
 		add(itemListBtn);
 		add(chatListBtn);
@@ -105,6 +108,10 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		chatListPanel.setVisible(false);
 		addItemPanel.setVisible(false);
 		myInfoPanel.setVisible(false);
+		
+		updateBtn.setBorderPainted(false); // 외각 투명하게
+		updateBtn.setContentAreaFilled(false); // 내용영역 채우기 없애기
+		updateBtn.setFocusPainted(false); // 선택 되었을 때 얇은 점선 테두리 없애기
 
 	}
 
@@ -115,12 +122,13 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		myInfoPanel.setVisible(false);
 		add(itemDetilPanel);
 
-		searchBtn.setEnabled(false);
+	
 		itemListBtn.setEnabled(false);
 		chatListBtn.setEnabled(false);
 		addItemBtn.setEnabled(false);
 		myInfoBtn.setEnabled(false);
 		updateBtn.setEnabled(false);
+		
 	}
 
 	public void startChat(int roomId) {
@@ -143,7 +151,6 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		addItemPanel.setVisible(false);
 		myInfoPanel.setVisible(false);
 
-		searchBtn.setEnabled(false);
 		itemListBtn.setEnabled(false);
 		chatListBtn.setEnabled(false);
 		addItemBtn.setEnabled(false);
@@ -157,7 +164,7 @@ public class PanelAdapter extends JPanel implements ActionListener {
 		addItemPanel.setVisible(false);
 		myInfoPanel.setVisible(false);
 
-		searchBtn.setEnabled(true);
+	
 		itemListBtn.setEnabled(true);
 		chatListBtn.setEnabled(true);
 		addItemBtn.setEnabled(true);

@@ -100,7 +100,7 @@ public class LoginPanel extends JPanel implements FocusListener {
 		btnLogin.setSize(Resource.LOGIN_COMP_X -50 , Resource.LOGIN_COMP_Y);
 		btnJoin.setSize(Resource.LOGIN_COMP_X -50, Resource.LOGIN_COMP_Y);
 		logoLabel.setSize(100,100);
-		logoLabel.setLocation(150,60);
+		logoLabel.setLocation(150,90);
 		
 		idField.setLocation(130, 240);
 		pwdField.setLocation(130, 280); 

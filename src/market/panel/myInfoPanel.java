@@ -1,20 +1,10 @@
 package market.panel;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,11 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingWorker;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import market.MainFrame;
 import market.Resource;
@@ -53,6 +38,8 @@ public class myInfoPanel extends JPanel implements ActionListener {
 	private JButton updateBtn;
 	private JButton deleteBtn;
 	private JScrollPane jScrollPane;
+	
+	private ImageIcon reviceicon;
 
 	public myInfoPanel(MainFrame mContext, PanelAdapter panelAdapter) {
 		this.mContext = mContext;
@@ -69,7 +56,8 @@ public class myInfoPanel extends JPanel implements ActionListener {
 		setSize(Resource.ADP_PANEL_X, Resource.ADP_PANEL_Y);
 		setLocation(0, 50);
 
-		reviceBtn = new JButton("수정");
+		reviceicon = new ImageIcon("img/btn수정하기.png");
+		reviceBtn = new JButton(reviceicon);
 		reviceLbl = new JLabel("회원정보 수정");
 		reviceNameLbl = new JLabel("이름 수정");
 		revicePassLbl = new JLabel("비밀번호 수정");
@@ -77,11 +65,15 @@ public class myInfoPanel extends JPanel implements ActionListener {
 		reviceNameText = new JTextField();
 		new TextHint(reviceNameText, mContext.getMyUserDTO().getName());
 		revicePassText = new JPasswordField();
-		new TextHint(revicePassText, "비밀번호 입력");
+		new TextHint(revicePassText,mContext.getMyUserDTO().getPassword());
+		
+		reviceBtn.setBorderPainted(false); // 외각 투명하게
+		reviceBtn.setContentAreaFilled(false); // 내용영역 채우기 없애기
+		reviceBtn.setFocusPainted(false); // 선택 되었을 때 얇은 점선 테두리 없애기
 	}
 
 	private void setInitLayout() {
-		setBackground(Color.gray);
+		setBackground(Color.white);
 		setLayout(null);
 
 		reviceLbl.setSize(100, 100);

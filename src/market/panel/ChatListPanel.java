@@ -55,10 +55,8 @@ public class ChatListPanel extends JPanel implements ListSelectionListener,Runna
 	}
 
 	private void setInitLayout() {
-		setLayout(null);
-		setSize(400, 500);
-		setLocation(0, 50);
-		setBackground(Color.red);
+	
+	
 		
 		scrolled.setSize(400, 450);
 		scrolled.setLocation(0, 0);

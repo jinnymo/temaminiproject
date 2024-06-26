@@ -8,7 +8,9 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,7 +24,7 @@ public class Register extends JPanel implements FocusListener {
 	private JTextField pwdField;
 	private JButton btnSubmit;
 	private JButton btnCheckId;
-
+	
 	private Resource resource;
 	private TextHint hint;
 
@@ -30,6 +32,12 @@ public class Register extends JPanel implements FocusListener {
 	private UserRepoImpl uImpl;
 	private boolean idCheck;
 
+	private ImageIcon idCheckIcon;
+	private ImageIcon submitIcon;
+	
+	private JLabel logoLabel;
+	private ImageIcon logoIcon;
+	
 	// 생성자
 	public Register(MainFrame context, UserRepoImpl uImpl) {
 		this.context = context;
@@ -41,13 +49,19 @@ public class Register extends JPanel implements FocusListener {
 	}
 
 	private void initData() {
-
+		logoIcon = new ImageIcon("img/포도마켓.png");
+		idCheckIcon = new ImageIcon("img/btnid중복확인.png");
+		submitIcon = new ImageIcon("img/btn가입하기.png");
+		
+		
+		logoLabel = new JLabel(logoIcon);
+		
 		userName = new JTextField("이름을 입력하세요.");
 		idField = new JTextField("아이디를 입력하세요");
 		// TODO 아이디 중복확인 , 중복금지
 		pwdField = new JTextField("패스워드를 입력하세요");
-		btnSubmit = new JButton("가입하기");
-		btnCheckId = new JButton("아이디 중복 확인");
+		btnSubmit = new JButton(submitIcon);
+		btnCheckId = new JButton(idCheckIcon);
 
 		userName.setForeground(Color.GRAY);
 		idField.setForeground(Color.GRAY);
@@ -59,9 +73,10 @@ public class Register extends JPanel implements FocusListener {
 		setLayout(null);
 		setSize(Resource.PANEL_FULL_SIZE_X, Resource.PANEL_FULL_SIZE_Y);
 		setLocation(0, 0);
-		setBackground(Color.yellow);
+		setBackground(Color.white);
 		setVisible(true);
 
+		add(logoLabel);
 		add(userName);
 		add(idField);
 		add(pwdField);
@@ -77,18 +92,27 @@ public class Register extends JPanel implements FocusListener {
 		pwdField.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 		btnSubmit.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
 		btnCheckId.setSize(Resource.LOGIN_COMP_X, Resource.LOGIN_COMP_Y);
+		logoLabel.setSize(100,100);
+		logoLabel.setLocation(150,90);
 
-		userName.setLocation(125, 70);
-		idField.setLocation(125, 100);
-		btnCheckId.setLocation(125, 140);
-		pwdField.setLocation(125, 180);
-		btnSubmit.setLocation(125, 220);
+		userName.setLocation(125, 240);
+		idField.setLocation(125, 270);
+		btnCheckId.setLocation(125, 310);
+		pwdField.setLocation(125, 350);
+		btnSubmit.setLocation(125, 390);
 
 		context.add(this);
 
 		// 알림 양식
 		// JOptionPane.showMessageDialog(null, "알림","알림제목",JOptionPane.WARNING_MESSAGE);
 
+		btnCheckId.setBorderPainted(false); // 외각 투명하게
+		btnCheckId.setContentAreaFilled(false); // 내용영역 채우기 없애기
+		btnCheckId.setFocusPainted(false); // 선택 되었을 때 얇은 점선 테두리 없애기
+		
+		btnSubmit.setBorderPainted(false); // 외각 투명하게
+		btnSubmit.setContentAreaFilled(false); // 내용영역 채우기 없애기
+		btnSubmit.setFocusPainted(false); // 선택 되었을 때 얇은 점선 테두리 없애기
 	}
 
 	private void addEventListener() {
